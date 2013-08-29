@@ -9,15 +9,24 @@ $field = array(
 		'login-form-type'=>$_POST['login-form-type'],
 	);
 
-////	var_dump($field);
-$formUrl = 'http://xg.gdufs.edu.cn/pkmslogin.form';
-//$referUrl = "http://xg.gdufs.edu.cn/epstar/app/template.jsp?mainobj=SWMS/SSGLZXT/SSAP/V_SS_SSXXST&tfile=XSCKMB/BDTAG&filter=V_SS_SSXXST:XH='".$field['username']."'";
-$referUrl = $user->getReferUrl($field['username'], 2);
+
+
+$formUrl = 'http://xg.gdufs.edu.cn/pkmslogin.form';//学工管理的登陆框
+$requestUrl = $user->getRequestUrl($field['username'], 1);//Gwtxz类里内置的一些请求地址
+
+//获取数字广外的通知
+$requestUrl2 = "http://auth.gdufs.edu.cn/wps/myportal/001/00101/!ut/p/c5/fY1LDoIwFADPwgHMe_zLEj-RFhURVNoNqYnBSimEGNTb686dmcUsZjEg4IuRk2rkQ_VGaqhABHWWJ0jnxImynPlI03K7TEjoIgmBgwh_HcliiZSydOOtmItrhGpS1yeUUKFXF_eIbb4-zqOUvYuzmFUmaI-dzspuYEL7r0voH6S-ddLo2diefd7HCyUK0VgWZLaDngu7vZbKQPn3yoH_7YLGp9FxbDtAtAkMLZ8a0lsfBmXNWQ!!/";
+
+//数字广外的referUrl
+$referUrl = 'http://auth.gdufs.edu.cn/wps/portal/newhome/!ut/p/c5/04_SB8K8xLLM9MSSzPy8xBz9CP0os3j_QA8DTycLI0t3Zw9TA09fD6MgDwtXQwN3U30_j_zcVP2CbEdFALkG2FQ!/dl3/d3/L2dBISEvZ0FBIS9nQSEh/';
+
 $user->checkField($field, $formUrl);
-$user->saveContent($referUrl);
+$user->saveContent($requestUrl);
 $content = $user->getContent();
 
-//$content = $user->getStudentNumber(2);
+// $temp = $user->getAcademy(1);
+// var_dump($temp);
+// echo '<br/>';
 var_dump($content);
 
 

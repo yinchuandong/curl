@@ -1,9 +1,9 @@
 <?php
-header("Content-type:text/html;charset=utf-8");
+
 init();
 function init(){
 
-	$url = "http://auth.gdufs.edu.cn/pkmslogin.form";
+	$url = "http://jw.gdufs.edu.cn/pkmslogin.form";
 	$field = array(
 		'username'=>'20111003632',
 		'password'=>'yin543211',
@@ -18,15 +18,15 @@ function init(){
 	
 	$header = array(
 		'POST /pkmslogin.form HTTP/1.1',
-		'Host: '.'auth.gdufs.edu.cn',
+		'Host: '.'jw.gdufs.edu.cn',
 		'Connection: keep-alive',
 		'Content-Length: '.strlen($param),
 		'Cache-Control: max-age=0',
 		'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-		'Origin: http://auth.gdufs.edu.cn',
+		'Origin: '.$url,
 		'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.12 Safari/537.31',
 		'Content-Type: application/x-www-form-urlencoded',
-		'Referer: http://auth.gdufs.edu.cn/wps/portal/newhome/!ut/p/c5/04_SB8K8xLLM9MSSzPy8xBz9CP0os3j_QA8DTycLI0t3Zw9TA09fD6MgDwtXQwN3U30_j_zcVP2CbEdFALkG2FQ!/dl3/d3/L2dBISEvZ0FBIS9nQSEh/',
+		'Referer: '.$url,
 		'Accept-Encoding: gzip,deflate,sdch',
 		'Accept-Language: zh-CN,zh;q=0.8',
 		'Accept-Charset: GBK,utf-8;q=0.7,*;q=0.3',
@@ -68,8 +68,7 @@ function init(){
 	// array_push($header, $matches[0][0]);
 	// array_push($header, $matches[0][1]);
 
-	// $url2 = "http://auth.gdufs.edu.cn/wps/myportal/001/00101";
-	$url2 = "http://auth.gdufs.edu.cn/wps/myportal/001/00101/!ut/p/c5/fY1LDoIwFADPwgHMe_zLEj-RFhURVNoNqYnBSimEGNTb686dmcUsZjEg4IuRk2rkQ_VGaqhABHWWJ0jnxImynPlI03K7TEjoIgmBgwh_HcliiZSydOOtmItrhGpS1yeUUKFXF_eIbb4-zqOUvYuzmFUmaI-dzspuYEL7r0voH6S-ddLo2diefd7HCyUK0VgWZLaDngu7vZbKQPn3yoH_7YLGp9FxbDtAtAkMLZ8a0lsfBmXNWQ!!/";
+	$url2 = "http://jw.gdufs.edu.cn/xskbcx.aspx?xh=20111003632";
 	// echo $cookie;
 	$ch2 = curl_init($url2);
 	// curl_setopt($ch, CURLOPT_HEADER, true);
