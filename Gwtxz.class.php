@@ -52,7 +52,7 @@ class Gwtxz {
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $param);
 		curl_setopt($ch, CURLOPT_COOKIEJAR, dirname(__FILE__).'/cookie.txt'); 
 		// curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);//加了会出错
-		
+		// curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 		ob_start();
 		// 抓取URL并把它传递给浏览器
 		curl_exec($ch);
