@@ -1,6 +1,6 @@
 <?php
+error_reporting(E_ALL);
 include 'Gwtxz.class.php';
-
 $user = new Gwtxz();
 
 $field = array(
@@ -8,6 +8,7 @@ $field = array(
 		'password'=>$_POST['password'],
 		'login-form-type'=>$_POST['login-form-type'],
 	);
+
 ////	var_dump($field);
 $formUrl = 'http://xg.gdufs.edu.cn/pkmslogin.form';
 //$referUrl = "http://xg.gdufs.edu.cn/epstar/app/template.jsp?mainobj=SWMS/SSGLZXT/SSAP/V_SS_SSXXST&tfile=XSCKMB/BDTAG&filter=V_SS_SSXXST:XH='".$field['username']."'";

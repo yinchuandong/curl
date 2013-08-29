@@ -27,7 +27,7 @@ class Gwtxz {
 		$host = $this->parseHost($formUrl);
 		
 		$header = array(
-			'POST /pkmslogin.form HTTP/1.1',
+			'POST http://jw.gdufs.edu.cn/pkmslogin.form HTTP/1.1',
 			'Host: '.$host,
 			'Connection: keep-alive',
 			'Content-Length: '.strlen($param),
