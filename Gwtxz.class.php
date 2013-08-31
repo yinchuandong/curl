@@ -1,5 +1,6 @@
 <?php
 class Gwtxz {
+	private $firstContent = '';
 	private $pageContent = '';//保存返回的页面内容
 
 	public $cookie = '';
@@ -17,7 +18,7 @@ class Gwtxz {
 		list($header, $body) = explode("\r\n\r\n", $responseHeader);
 		preg_match_all("/set\-cookie:([^\r\n]*)/is", $header, $matches);
 		foreach ($matches[1] as $value) {
-			$this->cookie = $value.'; ';
+			$this->cookie .= $value.'; ';
 		}
 		
 	}
