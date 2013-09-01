@@ -42,10 +42,11 @@ $content = $user->getContent();
 
 $uriList = $user->parseLibContent($content);
 
-$user->saveContent($uriList['url'][0]);
+$user->saveContent($uriList['url'][1]);
 $content = $user->getContent();
 
-$content = $user->getLoanList($content);
+// $content = $user->getLoanList($content);
+$content = $user->getHistoryList($content);
 var_dump($content);
 
 // $test = '<td class=td1 valign=top width="2%" align="center"><input type="checkbox" name="c000320687000040">14124</td>';

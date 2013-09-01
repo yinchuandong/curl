@@ -244,7 +244,22 @@ class Library {
 		
 	}
 	
-	
+	//============获取当前借阅信息==================================
+	/**
+	 * 获得当前借阅的列表，返回所借阅的书的详细信息，以及归还时间等
+	 * 返回一个二维数组,详情如下：
+	 * id 书本的id
+	 * author 作者
+	 * url 书本详情的url
+	 * title 书本的标题
+	 * publishYear 出版的年限
+	 * returnTime 应该归还的时间
+	 * payment 欠了多少钱
+	 * location 哪个图书馆借的（南校或者北校)
+	 * searchNumber 索书号，该书在图书馆的哪个架子上
+	 * @param $content
+	 * @return array
+	 */
 	public function getLoanList($content){
 		$content = $this->escapeNote($content);
 // 		$content = $this->escapeScript($content);
@@ -295,8 +310,75 @@ class Library {
 		return '/'.$regular.'/i';
 	}
 	
-	//=======================================================
+	//===========获取借阅历史表===================================================
+	/**
+	 * 获取借阅历史的列表，返回一个二位数组，详情如下：
+	 * url 书本详细信息的url
+	 * author 作者
+	 * title 标题
+	 * publishYear 出版年限
+	 * limitDate 应还日期
+	 * limitTime 应还时间
+	 * returnDate 归还日期
+	 * returnTime 归还时间
+	 * payment 欠了多少钱
+	 * location 南校或北校图书馆
+	 * @param unknown_type $content
+	 * @return unknown|NULL
+	 */
+	public function getHistoryList($content){
+		$content = $this->escapeNote($content);
+		$pattern = $this->getHistoryListRegular();
+// 		echo $content;
+		if(preg_match_all($pattern, $content, $matches)){
+			$result['url'] = $matches[5];
+			$result['author'] = $matches[6];
+			$result['title'] = $matches[10];
+			$result['publishYear'] = $matches[13];
+			$result['limitDate'] = $matches[16];
+			$result['limitTime'] = $matches[19];
+			$result['returnDate'] = $matches[22];
+			$result['returnTime'] = $matches[25];
+			$result['payment'] = $matches[28];
+			$result['location'] = $matches[31];
+			return $result;
+		}else{
+			echo 'getHistoryList_false';
+			return null;
+		}
+		
+	}
 	
+	/**
+	 * 获取借书历史记录的正则表达式
+	 * @return string
+	 */
+	public function getHistoryListRegular(){
+		$regular = '';
+		//获得第一个通配符
+		$regular .= '<td class=td1 id=centered(.*)>(.)*<\/td>(.|\n)*?';
+		//获取作者
+		$regular .= '<td class=td1(.)*><a href="(.*)" target=_blank>(.*)<\/a><\/td>(.|\n)*?';
+		//标题
+		$regular .= '<td class=td1(.)*><a href="(.*)" target=_blank>(.*)<\/a><\/td>(.|\n)*?';
+		//出版时间
+		$regular .= '<td class=td1(.)*>(.*)<\/td>(.|\n)*?';
+		//应还日期
+		$regular .= '<td class=td1(.)*>(.*)<\/td>(.|\n)*?';
+		//应还时间
+		$regular .= '<td class=td1(.)*>(.*)<\/td>(.|\n)*?';
+		//归还日期
+		$regular .= '<td class=td1(.)*>(.*)<\/td>(.|\n)*?';
+		//归还时间
+		$regular .= '<td class=td1(.)*>(.*)<\/td>(.|\n)*?';
+		//罚款
+		$regular .= '<td class=td1(.)*>(.*)<\/td>(.|\n)*?';
+		//在哪个图书馆
+		$regular .= '<td class=td1(.)*>(.*)<\/td>(.|\n)*?';
+		return '/'.$regular.'/i';
+	}
+	
+	//===================公共函数====================================
 	/**
 	 * 去除html注释
 	 * @param string $text
