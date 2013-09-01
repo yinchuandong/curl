@@ -178,6 +178,8 @@ class Library {
 		return $referUrl;
 	}
 	
+	
+	//=====步骤2,获得跳转到具体当前借书或者历史列表的rul======================
 	public function getRedirectToLibUrl(){
 		$pattern = '#<a href=\"(.*)\" target=\"s\">(.*)<\/a>#';
 		
@@ -189,41 +191,128 @@ class Library {
 		}
 	}
 
+	/**
+	 * 解析从上一步获取的图书管界面的内容，获得跳转的url和对应的数量,返回一个二位数组
+	 * url[0]外借的url, num[0]外接的数量
+	 * url[1]借阅历史的url, num[1]借阅的历史数量
+	 * url[2]预约请求的url,num[2]预约请求的数量
+	 * url[2]预订请求的url,num[2]预定请求的数量
+	 * url[2]现金事物的url,num[2]现金事物的数量
+	 * 
+	 * @param string $text
+	 * @return array $result = array('url'=>array(),'num'=>array());
+	 */
 	public function parseLibContent($text){
 		
 		// $pattern = '#<div class="tabcontent" id="history" display="none;">(.*)<\/div>#';
 		// $pattern = '/div(.*)id="history"(.*)>(.*)<\/div>/ism';
 		
-		$pattern = '/div(.*)id="history"(.*)>(.*)<\/div>/ism';
-		$pattern2 = '/<td class="td1">(.*)<\/td>/ism';
+		//$pattern = '(<!--[\w\W\r\n]*?-->)|(<script(.*)>(.|\n)*?<\/script>)';
+		
+		$noNote = $this->escapeNote($text);
+			
+		$noScript = $this->escapeScript($noNote);
+		// var_dump($noScript);
+	
+		$pattern = '#<div(.*)id="?history"?(.*)>(.|\n)*</div>#';
+		$pattern2 = '/<td class="?td1"?>(.*)<\/td>/ism';
 		$pattern3 = '/<a href="javascript:replacePage\(\'(.*)\'\);">(.*)<\/a>/i';
-		if (preg_match($pattern, $text, $match)) {
+		if (preg_match($pattern, $noScript, $match)) {
 			// var_dump($match[0]);
 			$text2 = $match[0];
 		}else{
-			var_dump('12312'.$text);die;
+			var_dump('false1'.$text);die;
 		}
 
 		if (preg_match($pattern2, $text2, $match2)) {
 			// var_dump($match2);
 			$text3 = $match2[0];
 		}else{
-			echo 'fales;'; die;
+			echo 'false2;'; die;
 		}
 
 		if (preg_match_all($pattern3, $text3, $match3)) {
-			var_dump($match3);
+// 			var_dump($match3[2]);
+			$result = array(
+				'url' => $match3[1],
+				'num' => $match3[2]
+			);
+			return $result;
 		}else{
-			echo 'fales;'; die;
+			echo 'false3;';die;
 		}
-
+		
 	}
-
 	
 	
+	public function getLoanList($content){
+		$content = $this->escapeNote($content);
+// 		$content = $this->escapeScript($content);
+// 		echo $content;
+		$pattern = $this->getLoanListRegular();
+// 		$pattern = '/<td class=td1 id=centered(.*)>(.)*/i';
+		if(preg_match_all($pattern, $content, $matches)){
+			$result['id'] = $matches[5];
+			$result['author'] = $matches[8];
+			$result['url'] = $matches[11];
+			$result['title'] = $matches[12];
+			$result['publishYear'] = $matches[15];
+			$result['returnTime'] = $matches[18];
+			$result['payment'] = $matches[21];//这里有点问题，因为我没有欠钱，所以看不到
+			$result['location'] = $matches[24];
+			$result['searchNumber'] = $matches[27];
+			return $result;
+		}else{
+			echo 'getfalse';
+		}
+		
+	}
 	
+	/**
+	 * 获得借书列表的正则表达式;
+	 */
+	public function getLoanListRegular(){
+		$regular = '';
+		//获得第一个通配符
+		$regular .= '<td class=td1 id=centered(.*)>(.)*<\/td>(.|\n)*?';
+		//checkbok的name里面的值
+		$regular .= '<td class=td1(.)*><input type="checkbox" name="(.*)"><\/td>(.|\n)*?';
+		//作者
+		$regular .= '<td class=td1(.)*>(.*)<\/td>(.|\n)*?';
+		//书名
+		$regular .= '<td class=td1(.)*><a href="(.*)" target=_blank>(.*)<\/a><\/td>(.|\n)*?';
+		//出版日期
+		$regular .= '<td class=td1(.)*>(.*)<\/td>(.|\n)*?';
+		//应还日期 
+		$regular .= '<td class=td1(.)*>(.*)<\/td>(.|\n)*?';
+		//罚款
+		$regular .= '<td class=td1(.)*>(.)*<\/td>(.|\n)*?';
+		//南校还是北校
+		$regular .= '<td class=td1(.)*>(.*)<\/td>(.|\n)*?';
+		//索书号
+		$regular .= '<td class=td1(.)*>(.*)<\/td>(.|\n)*?';
+		
+		return '/'.$regular.'/i';
+	}
 	
+	//=======================================================
 	
+	/**
+	 * 去除html注释
+	 * @param string $text
+	 */
+	public function escapeNote($text){
+		return preg_replace('/<!--[\w\W\r\n]*?-->/i', "", $text);
+	}
+	
+	/**
+	 * 去除script标签
+	 * @param string $text
+	 * @return string
+	 */
+	public function escapeScript($text){
+		return preg_replace('/<script(.*)>(.|\n)*?<\/script>/i', "", $text);
+	}
 	
 	
 	
