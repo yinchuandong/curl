@@ -192,13 +192,31 @@ class Library {
 	public function parseLibContent($text){
 		
 		// $pattern = '#<div class="tabcontent" id="history" display="none;">(.*)<\/div>#';
+		// $pattern = '/div(.*)id="history"(.*)>(.*)<\/div>/ism';
+		
 		$pattern = '/div(.*)id="history"(.*)>(.*)<\/div>/ism';
-		// $pattern = '/<DIV[^>/]*?\s+class=\"tabcontent\" id=\"history\" display="\none;\"[^>/]*>(.*?)<\/DIV>/i';
+		$pattern2 = '/<td class="td1">(.*)<\/td>/ism';
+		$pattern3 = '/<a href="javascript:replacePage\(\'(.*)\'\);">(.*)<\/a>/i';
 		if (preg_match($pattern, $text, $match)) {
-			var_dump($match);
+			// var_dump($match[0]);
+			$text2 = $match[0];
 		}else{
-			var_dump('12312'.$text);
+			var_dump('12312'.$text);die;
 		}
+
+		if (preg_match($pattern2, $text2, $match2)) {
+			// var_dump($match2);
+			$text3 = $match2[0];
+		}else{
+			echo 'fales;'; die;
+		}
+
+		if (preg_match_all($pattern3, $text3, $match3)) {
+			var_dump($match3);
+		}else{
+			echo 'fales;'; die;
+		}
+
 	}
 
 	
