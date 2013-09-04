@@ -136,24 +136,43 @@ class Library {
 	 * @param string $content
 	 * @return array
 	 */
-	public function getFinalUrl($content){
-		$libUrl = $this->getRedirectToLibUrl($content);
+	public function getFinalUrl($requestUrl){
+		$this->saveContent($requestUrl);
+		$content = $this->getContent();
+		$libUrl = $this->getRedirectToLibUrl($content);//1.先获取跳到图书馆页面的url，即我的流通页面
 		$this->saveContent($libUrl);
-		$uriList = $this->parseLibContent($this->getContent());
+		$uriList = $this->parseLibContent($this->getContent()); //2.获取所有的页面url
 		return $uriList;
 	}
 	
-	public function getAuthTmpUrl($content){
-		$libUrl = $this->getRedirectToLibUrl($content);
-		$this->saveContent($libUrl);
+	/**
+	 * 得到续借的url
+	 * 1，http://opac.gdufs.edu.cn:8991/F/T8RKYKUS9U8I63IFIR5HUC7SSSJLBQ7TA8LPE6S5L4YUY3D4AF-01289 解析为：
+	 * 	 http://opac.gdufs.edu.cn:8991/F/T8RKYKUS9U8I63IFIR5HUC7SSSJLBQ7TA8LPE6S5L4YUY3D4AF   01289
+	 * 2，根据标签的index计算出url
+	 * @param string $loanListUrl 当前借阅的列表url
+	 * @return $result 部分续借和全部续借的url
+	 * 续借部分书名时，还要加上id1=Y&id2=Y
+	 */
+	public function getRenewUrl($loanListUrl){
+		$this->saveContent($loanListUrl);
 		$content = $this->getContent();
-// 		die;
 		$pattern = '/<script\>var tmp=\"(.*)(\-)(.*)\";<\/script>/';
 		if (preg_match($pattern, $content,$match)){
-			var_dump($match);
+			$baseUrl = $match[1];
+			$index = $match[3];
+			$renewApartUrl = $baseUrl.'-'.sprintf('%05d', $index + 1).'?func=bor-renew-all&renew_selected=Y&adm_library=GWD50';
+			$renewAllUrl = $baseUrl.'-'.sprintf('%05d', $index + 16).'?func=bor-renew-all&adm_library=GWD50';
+			$result = array(
+				'renewApart' => $renewApartUrl, //部分续借
+				'renewAll' => $renewAllUrl   	//全部续借
+			);
+			return $result;
 		}else{
 			echo 'Library getAuthTmpUrl false';
+			return null;
 		}
+		
 		
 // 		var_dump($content);
 	}
@@ -293,7 +312,9 @@ class Library {
 	 * @param $content
 	 * @return array
 	 */
-	public function getLoanList($content){
+	public function getLoanList($url){
+		$this->saveContent($url);
+		$content = $this->getContent();
 		$content = $this->escapeNote($content);
 // 		$content = $this->escapeScript($content);
 // 		echo $content;
@@ -319,7 +340,7 @@ class Library {
 	/**
 	 * 获得借书列表的正则表达式;
 	 */
-	public function getLoanListRegular(){
+	private function getLoanListRegular(){
 		$regular = '';
 		//获得第一个通配符
 		$regular .= '<td class=td1 id=centered(.*)>(.)*<\/td>(.|\n)*?';
@@ -359,7 +380,9 @@ class Library {
 	 * @param unknown_type $content
 	 * @return unknown|NULL
 	 */
-	public function getHistoryList($content){
+	public function getHistoryList($url){
+		$this->saveContent($url);
+		$content = $this->getContent();
 		$content = $this->escapeNote($content);
 		$pattern = $this->getHistoryListRegular();
 // 		echo $content;
@@ -386,7 +409,7 @@ class Library {
 	 * 获取借书历史记录的正则表达式
 	 * @return string
 	 */
-	public function getHistoryListRegular(){
+	private function getHistoryListRegular(){
 		$regular = '';
 		//获得第一个通配符
 		$regular .= '<td class=td1 id=centered(.*)>(.)*<\/td>(.|\n)*?';
@@ -416,7 +439,7 @@ class Library {
 	 * 去除html注释
 	 * @param string $text
 	 */
-	public function escapeNote($text){
+	private function escapeNote($text){
 		return preg_replace('/<!--[\w\W\r\n]*?-->/i', "", $text);
 	}
 	
@@ -425,7 +448,7 @@ class Library {
 	 * @param string $text
 	 * @return string
 	 */
-	public function escapeScript($text){
+	private function escapeScript($text){
 		return preg_replace('/<script(.*)>(.|\n)*?<\/script>/i', "", $text);
 	}
 	
