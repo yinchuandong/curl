@@ -20,7 +20,7 @@ $field = array(
 
 
 $formUrl = 'http://xg.gdufs.edu.cn/pkmslogin.form';//学工管理的登陆框
-$requestUrl = $user->getRequestUrl($field['username'], 1);//Gwtxz类里内置的一些请求地址
+$requestUrl = $user->getRequestUrl($field['username'], 2);//Gwtxz类里内置的一些请求地址
 
 //获取数字广外的通知
 $requestUrl2 = "http://auth.gdufs.edu.cn/wps/myportal/001/00101/!ut/p/c5/fY1LDoIwFADPwgHMe_zLEj-RFhURVNoNqYnBSimEGNTb686dmcUsZjEg4IuRk2rkQ_VGaqhABHWWJ0jnxImynPlI03K7TEjoIgmBgwh_HcliiZSydOOtmItrhGpS1yeUUKFXF_eIbb4-zqOUvYuzmFUmaI-dzspuYEL7r0voH6S-ddLo2diefd7HCyUK0VgWZLaDngu7vZbKQPn3yoH_7YLGp9FxbDtAtAkMLZ8a0lsfBmXNWQ!!/";

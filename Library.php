@@ -30,9 +30,7 @@ class Library {
 	 * @param array $field //表单的数据
 	 * @param string $formUrl //广外统一验证入口 
 	 * @param string $refer //页面的refer,由于数字广外采用了xscf，如果要获取数字广外的内容，必须指定该项
-	 * 学工管理： http://xg.gdufs.edu.cn/pkmslogin.form 
-	 * 正方教务： http://jw.gdufs.edu.cn/pkmslogin.form
-	 * 
+	 * @return bool 用户名和密码正确，返回true;否则返回false; 
 	 */
 	function checkField($field, $formUrl='',$refer=''){
 		if (empty($formUrl)){//默认为正方管理系统的验证入口
@@ -88,12 +86,12 @@ class Library {
 		
 		$this->parseResponseCookie($content);//从返回的内容中提取出cookie
 		
-		$pattern ='#<TITLE>Success<\/TITLE>#';
+		$pattern ='#用户名或密码错误#';
 		if(preg_match($pattern, $content)){
-//			echo 1;
+// 			echo 1;
 			return true;
 		}else{
-//			echo 2;
+// 			echo 2;
 			return false;
 		}
 	
@@ -128,6 +126,41 @@ class Library {
 		return $this->pageContent;
 	}
 	
+	/**
+	 * 解析登陆之后返回的内容，获得跳转的url和对应的数量,返回一个二位数组
+	 * url[0]外借的url, num[0]外接的数量
+	 * url[1]借阅历史的url, num[1]借阅的历史数量
+	 * url[2]预约请求的url,num[2]预约请求的数量
+	 * url[2]预订请求的url,num[2]预定请求的数量
+	 * url[2]现金事物的url,num[2]现金事物的数量
+	 * @param string $content
+	 * @return array
+	 */
+	public function getFinalUrl($content){
+		$libUrl = $this->getRedirectToLibUrl($content);
+		$this->saveContent($libUrl);
+		$uriList = $this->parseLibContent($this->getContent());
+		return $uriList;
+	}
+	
+	public function getAuthTmpUrl($content){
+		$libUrl = $this->getRedirectToLibUrl($content);
+		$this->saveContent($libUrl);
+		$content = $this->getContent();
+// 		die;
+		$pattern = '/<script\>var tmp=\"(.*)(\-)(.*)\";<\/script>/';
+		if (preg_match($pattern, $content,$match)){
+			var_dump($match);
+		}else{
+			echo 'Library getAuthTmpUrl false';
+		}
+		
+// 		var_dump($content);
+	}
+	
+	
+	
+	//=====================一些工具函数============================================
 	/**
 	 * 从一串url地址中，解析主机
 	 * 
@@ -180,10 +213,10 @@ class Library {
 	
 	
 	//=====步骤2,获得跳转到具体当前借书或者历史列表的rul======================
-	public function getRedirectToLibUrl(){
+	public function getRedirectToLibUrl($content){
 		$pattern = '#<a href=\"(.*)\" target=\"s\">(.*)<\/a>#';
 		
-		$content = $this->getContent();
+// 		$content = $this->getContent();
 		if (preg_match($pattern, $content, $match)) {
 			return $match[1];
 		}else{
@@ -199,7 +232,7 @@ class Library {
 	 * url[2]预订请求的url,num[2]预定请求的数量
 	 * url[2]现金事物的url,num[2]现金事物的数量
 	 * 
-	 * @param string $text
+	 * @param string $text 图书馆基本信息页面的content
 	 * @return array $result = array('url'=>array(),'num'=>array());
 	 */
 	public function parseLibContent($text){

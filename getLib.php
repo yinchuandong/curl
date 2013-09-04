@@ -31,16 +31,14 @@ $referUrl = 'http://auth.gdufs.edu.cn/wps/portal/newhome/!ut/p/c5/04_SB8K8xLLM9M
 $referUrl2 = 'http://lib.gdufs.edu.cn/bor.php';
 
 
-$user->checkField($field, $referUrl2);
-$user->saveContent($requestUrl3);
-$content = $user->getContent();
+$user->checkField($field, $referUrl2);// 检查用户名或密码是否正确，并且保存了cookie
+$user->saveContent($requestUrl3); //请求图书馆的首页
+$content = $user->getContent(); //获得图书馆首页的内容
 
+// $uriList = $user->getFinalUrl($content);//得到跳转至具体页面的url，具体看函数注释
+$content = $user->getAuthTmpUrl($content);
 
-$newurl = $user->getRedirectToLibUrl();
-$user->saveContent($newurl);
-$content = $user->getContent();
-
-$uriList = $user->parseLibContent($content);
+die;
 
 $user->saveContent($uriList['url'][1]);
 $content = $user->getContent();
@@ -49,9 +47,6 @@ $content = $user->getContent();
 $content = $user->getHistoryList($content);
 var_dump($content);
 
-// $test = '<td class=td1 valign=top width="2%" align="center"><input type="checkbox" name="c000320687000040">14124</td>';
-// // echo $test;
-// echo strip_tags($test);
 
 
 
