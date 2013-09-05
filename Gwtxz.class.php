@@ -207,7 +207,7 @@ class Gwtxz {
 		$content = $this->getContent();
 		if (preg_match($pattern, $content,$match)) {
 			
-			return $match[0];
+			return $match[3];
 		}else{
 			return NULL;
 		}
@@ -227,7 +227,7 @@ class Gwtxz {
 		
 		$content = $this->getContent();
 		if (preg_match($pattern, $content,$match)) {
-			return $match[0];
+			return $match[3];
 		}else{
 			return NULL;
 		}

@@ -34,12 +34,12 @@ $referUrl2 = 'http://lib.gdufs.edu.cn/bor.php';
 $user->checkField($field, $referUrl2);// 检查用户名或密码是否正确，并且保存了cookie
 
 $uriList = $user->getFinalUrl($requestUrl3);//得到跳转至具体页面的url，具体看函数注释
-$content = $user->getRenewUrl($uriList['url'][0]);
-var_dump($content);
+// $content = $user->getRenewUrl($uriList['url'][0]);
+// var_dump($content);
 
-die;
-$content = $user->getLoanList($uriList['url'][0]);
-// $content = $user->getHistoryList($uriList['url'][1]);
+// die;
+// $content = $user->getLoanList($uriList['url'][0]); //当前借阅列表
+$content = $user->getHistoryList($uriList['url'][1]); //借阅历史
 var_dump($content);
 
 
