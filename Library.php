@@ -305,10 +305,10 @@ class Library {
 	 * url 书本详情的url
 	 * title 书本的标题
 	 * publishYear 出版的年限
-	 * returnTime 应该归还的时间
+	 * returnDate 应该归还的时间
 	 * payment 欠了多少钱
 	 * location 哪个图书馆借的（南校或者北校)
-	 * searchNumber 索书号，该书在图书馆的哪个架子上
+	 * callNumber 索书号，该书在图书馆的哪个架子上
 	 * @param $content
 	 * @return array
 	 */
@@ -326,10 +326,10 @@ class Library {
 			$result['url'] = $matches[11];
 			$result['title'] = $matches[12];
 			$result['publishYear'] = $matches[15];
-			$result['returnTime'] = $matches[18];
+			$result['returnDate'] = $matches[18];
 			$result['payment'] = $matches[21];//这里有点问题，因为我没有欠钱，所以看不到
 			$result['location'] = $matches[24];
-			$result['searchNumber'] = $matches[27];
+			$result['callNumber'] = $matches[27];
 			return $result;
 		}else{
 			echo 'getfalse';
