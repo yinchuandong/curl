@@ -17,6 +17,7 @@ class Gwtxz {
 	public function parseResponseCookie($responseHeader){
 		list($header, $body) = explode("\r\n\r\n", $responseHeader);
 		preg_match_all("/set\-cookie:([^\r\n]*)/is", $header, $matches);
+// 		$this->cookie="";
 		foreach ($matches[1] as $value) {
 			$this->cookie .= $value.'; ';
 		}
@@ -86,6 +87,7 @@ class Gwtxz {
 		
 		$this->parseResponseCookie($content);//从返回的内容中提取出cookie
 		
+// 		echo ($content);
 		$pattern ='#<TITLE>Success<\/TITLE>#';
 		if(preg_match($pattern, $content)){
 //			echo 1;
@@ -105,20 +107,67 @@ class Gwtxz {
 	 */
 	function saveContent($requesUrl){
 //		$this->checkField($field);
-		
+
 		$ch2 = curl_init();
 		curl_setopt($ch2, CURLOPT_URL, $requesUrl);
 		curl_setopt($ch2, CURLOPT_COOKIE, $this->cookie);
 // 		curl_setopt($ch2, CURLOPT_COOKIEFILE, dirname(__FILE__).'/cookie.txt');
 	
 		ob_start();
-		curl_exec($ch2);
-		$content = ob_get_contents();
-		ob_end_clean();
+		$content = curl_exec($ch2);
+// 		$content = ob_get_contents();
 		
+		ob_end_clean();
+		$info = curl_getinfo($ch2);
+		curl_close($ch2);
 		$this->pageContent = $content;
 
-		curl_close($ch2);	
+		return $info;
+			
+	}
+	
+	function checkField2($formUrl='',$refer=''){
+		$host = $this->parseHost($formUrl);
+		$origin = 'http://'.$host;
+// 		echo $host.'===='.$origin.'===='.$refer;
+		
+		
+		$header = array(
+			'GET /gwd_local/login_ibm.jsp HTTP/1.1',
+			'Host: '.$host,
+			'Connection: keep-alive',
+			'Cache-Control: max-age=0',
+			'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+			'Origin: '.$origin,
+			'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.12 Safari/537.31',
+			'Content-Type: application/x-www-form-urlencoded',
+			'Referer: '.$refer,
+			'Accept-Encoding: gzip,deflate,sdch',
+			'Accept-Language: zh-CN,zh;q=0.8',
+			'Accept-Charset: GBK,utf-8;q=0.7,*;q=0.3',
+			
+		);
+		
+// 		$cookie = $this->cookie.' ;PD_STATEFUL_30048bce-ffc9-11e2-9b0a-00237d9f6ff6=auth.gdufs.edu.cn; ';
+		
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $formUrl);
+		curl_setopt($ch, CURLOPT_COOKIE, $this->cookie);
+		curl_setopt($ch, CURLOPT_HEADER, true);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+		
+		// 抓取URL并把它传递给浏览器
+		$content = curl_exec($ch);
+		
+		curl_close($ch);
+		
+		$this->parseResponseCookie($content);//从返回的内容中提取出cookie
+// 		$this->cookie .= '; PD_STATEFUL_30048bce-ffc9-11e2-9b0a-00237d9f6ff6=auth.gdufs.edu.cn;';
+		
+		var_dump($this->cookie);
+		echo $content;
 	}
 	
 	
