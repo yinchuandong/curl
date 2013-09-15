@@ -45,7 +45,7 @@ $user->checkField($field, $formUrl4,"http://tsg.gdufs.edu.cn/");
 $result = $user->saveContent("http://tsg.gdufs.edu.cn/gwd_local/login_ibm.jsp");
 
 var_dump($result);
-// die;
+die;
 $content = $user->getContent();
 
 // var_dump($user->cookie);

@@ -110,6 +110,7 @@ class Gwtxz {
 
 		$ch2 = curl_init();
 		curl_setopt($ch2, CURLOPT_URL, $requesUrl);
+		curl_setopt($ch2, CURLOPT_FOLLOWLOCATION, 1);
 		curl_setopt($ch2, CURLOPT_COOKIE, $this->cookie);
 // 		curl_setopt($ch2, CURLOPT_COOKIEFILE, dirname(__FILE__).'/cookie.txt');
 	
@@ -117,6 +118,7 @@ class Gwtxz {
 		curl_exec($ch2);
 		$content = ob_get_contents();
 		ob_end_clean();
+		
 		$info = curl_getinfo($ch2);
 		curl_close($ch2);
 		$this->pageContent = $content;
