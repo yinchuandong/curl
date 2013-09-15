@@ -5,10 +5,6 @@ class Library {
 
 	public $cookie = '';
 	
-	public $formUrl = '';
-	public $requestUrl = '';
-	
-	public $returnInfo = '';
 	
 	public function __construct(){
 		
@@ -149,10 +145,7 @@ class Library {
 		}
 		$result = $this->saveContent($requestUrl);
 		$libUrl = $result['redirect_url'];
-// 		$content = $this->getContent();
-// 		$libUrl = $this->getRedirectToLibUrl($content);//1.先获取跳到图书馆页面的url，即我的流通页面
 		$this->saveContent($libUrl);
-// 		var_dump($this->getContent());
 		$uriList = $this->parseLibContent($this->getContent()); //2.获取所有的页面url
 		return $uriList;
 	}
@@ -205,33 +198,6 @@ class Library {
 		return $match[4];
 	}
 	
-	/**
-	 * 生成请求的地址
-	 * @param string $schoolNumber 学号
-	 * @param int $type 类型： 1为正方管理系统>>我的信息；2为正方管理系统>>我的课表；3为学工管理>>我的基本信息；4为学工管理>>我的宿舍信息
-	 * @return string $requstUrl 返回请求的地址
-	 */
-	public function getRequestUrl($schoolNumber, $type){
-		$requestUrl = '';
-		switch ($type){
-			case 1:
-				$requestUrl = 'http://jw.gdufs.edu.cn/xsgrxx.aspx?xh='.$schoolNumber;
-				break;
-			case 2:
-				$requestUrl = 'http://jw.gdufs.edu.cn/xskbcx.aspx?xh='.$schoolNumber;
-				break;
-			case 3:
-				$requestUrl = 'http://xg.gdufs.edu.cn/epstar/app/template.jsp?mainobj=SWMS/XSJBXX/T_XSJBXX_XSJBB&tfile=XGMRMB/detail_BDTAG';
-				break;
-			case 4:
-				$requestUrl = "http://xg.gdufs.edu.cn/epstar/app/template.jsp?mainobj=SWMS/SSGLZXT/SSAP/V_SS_SSXXST&tfile=XSCKMB/BDTAG&filter=V_SS_SSXXST:XH='".$schoolNumber."'";
-				break;
-			default:
-				$requestUrl = 'http://jw.gdufs.edu.cn/xsgrxx.aspx?xh='.$schoolNumber;
-				
-		}
-		return $requestUrl;		
-	}
 	
 	/**
 	 * 当获取数字广外的内容时，才需要用到
@@ -243,17 +209,6 @@ class Library {
 	}
 	
 	
-	//=====步骤2,获得跳转到具体当前借书或者历史列表的rul======================
-	public function getRedirectToLibUrl($content){
-		$pattern = '#<a href=\"(.*)\" target=\"s\">(.*)<\/a>#';
-		
-// 		$content = $this->getContent();
-		if (preg_match($pattern, $content, $match)) {
-			return $match[1];
-		}else{
-			return null;
-		}
-	}
 
 	/**
 	 * 解析从上一步获取的图书管界面的内容，获得跳转的url和对应的数量,返回一个二位数组
@@ -275,10 +230,7 @@ class Library {
 		//$pattern = '(<!--[\w\W\r\n]*?-->)|(<script(.*)>(.|\n)*?<\/script>)';
 // 		var_dump($text);
 		$noNote = $this->escapeNote($text);
-			
-// 		$noScript = $this->escapeScript($noNote);
-		var_dump($noNote);
-		return;
+		$noScript = $this->escapeScript($noNote);
 		$pattern = '#<div(.*)id="?history"?(.*)>(.|\n)*</div>#';
 		$pattern2 = '/<td class="?td1"?>(.*)<\/td>/ism';
 		$pattern3 = '/<a href="javascript:replacePage\(\'(.*)\'\);">(.*)<\/a>/i';
