@@ -19,15 +19,17 @@ $field = array(
 	);
 
 
-$formUrl = 'http://xg.gdufs.edu.cn/pkmslogin.form';//学工管理的登陆框
-$requestUrl = $user->getRequestUrl($field['username'], 1);//Gwtxz类里内置的一些请求地址
+// $formUrl = 'http://xg.gdufs.edu.cn/pkmslogin.form';//学工管理的登陆框
+// $requestUrl = $user->getRequestUrl($field['username'], 1);//Gwtxz类里内置的一些请求地址
 
-//获取数字广外的通知
-$requestUrl2 = "http://auth.gdufs.edu.cn/wps/myportal/001/00101/!ut/p/c5/fY1LDoIwFADPwgHMe_zLEj-RFhURVNoNqYnBSimEGNTb686dmcUsZjEg4IuRk2rkQ_VGaqhABHWWJ0jnxImynPlI03K7TEjoIgmBgwh_HcliiZSydOOtmItrhGpS1yeUUKFXF_eIbb4-zqOUvYuzmFUmaI-dzspuYEL7r0voH6S-ddLo2diefd7HCyUK0VgWZLaDngu7vZbKQPn3yoH_7YLGp9FxbDtAtAkMLZ8a0lsfBmXNWQ!!/";
+// //获取数字广外的通知
+// $requestUrl2 = "http://auth.gdufs.edu.cn/wps/myportal/001/00101/!ut/p/c5/fY1LDoIwFADPwgHMe_zLEj-RFhURVNoNqYnBSimEGNTb686dmcUsZjEg4IuRk2rkQ_VGaqhABHWWJ0jnxImynPlI03K7TEjoIgmBgwh_HcliiZSydOOtmItrhGpS1yeUUKFXF_eIbb4-zqOUvYuzmFUmaI-dzspuYEL7r0voH6S-ddLo2diefd7HCyUK0VgWZLaDngu7vZbKQPn3yoH_7YLGp9FxbDtAtAkMLZ8a0lsfBmXNWQ!!/";
 
-//lib
-$requestUrl3 = "http://lib.gdufs.edu.cn/bor.php";
+// //lib
+// $requestUrl3 = "http://lib.gdufs.edu.cn/bor.php";
 
+$requestUrl = 'http://tsg.gdufs.edu.cn/gwd_local/login_ibm.jsp';
+$formUrl = 'http://tsg.gdufs.edu.cn/pkmslogin.form';
 
 
 //数字广外的referUrl
