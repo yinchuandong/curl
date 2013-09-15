@@ -39,8 +39,10 @@ $referUrl = 'http://auth.gdufs.edu.cn/wps/portal/newhome/!ut/p/c5/04_SB8K8xLLM9M
 $user->checkField($field, $formUrl4,"http://tsg.gdufs.edu.cn/");
 
 // $user->checkField2("http://tsg.gdufs.edu.cn/gwd_local/login_ibm.jsp","http://auth.gdufs.edu.cn/wps/myportal");
-$user->saveContent("http://tsg.gdufs.edu.cn/gwd_local/login_ibm.jsp");
-// // $user
+$result = $user->saveContent("http://tsg.gdufs.edu.cn/gwd_local/login_ibm.jsp");
+
+var_dump($result['redirect_url']);
+die;
 $content = $user->getContent();
 
 // var_dump($user->cookie);

@@ -5,6 +5,10 @@ class Library {
 
 	public $cookie = '';
 	
+	public $formUrl = '';
+	public $requestUrl = '';
+	
+	public $returnInfo = '';
 	
 	public function __construct(){
 		
@@ -32,13 +36,19 @@ class Library {
 	 * @param string $refer //页面的refer,由于数字广外采用了xscf，如果要获取数字广外的内容，必须指定该项
 	 * @return bool 用户名和密码正确，返回true;否则返回false; 
 	 */
-	function checkField($field, $formUrl='',$refer=''){
+	function checkField($studentNumber, $password, $formUrl='',$refer=''){
 		if (empty($formUrl)){//默认为正方管理系统的验证入口
-			$formUrl = 'http://jw.gdufs.edu.cn/pkmslogin.form';
+			$formUrl = 'http://tsg.gdufs.edu.cn/pkmslogin.form';
 		}
 		if (empty($refer)){
-			$refer = $this->getReferUrl();
+			$refer = "http://tsg.gdufs.edu.cn/";
 		}
+		
+		$field = array(
+				'username'=>$studentNumber,
+				'password'=>$password,
+				'login-form-type'=> 'pwd', 
+		);
 		
 		$param = '';
 		foreach ($field as $key => $value){
@@ -86,26 +96,21 @@ class Library {
 		
 		$this->parseResponseCookie($content);//从返回的内容中提取出cookie
 		
-		$pattern ='#用户名或密码错误#';
+		$pattern ='#<TITLE>Success<\/TITLE>#';
 		if(preg_match($pattern, $content)){
-// 			echo 1;
 			return true;
 		}else{
-// 			echo 2;
 			return false;
 		}
 	
 	}
 	
 	/**
-	 * 保存页面返回内容
+	 * 保存页面返回内容,返回服务器端的返回头部，包括redirect_url
 	 * @param string $requesUrl 请求地址的url
-	 * 学工管理：http://xg.gdufs.edu.cn/epstar/app/template.jsp?mainobj=SWMS/XSJBXX/T_XSJBXX_XSJBB&tfile=XGMRMB/detail_BDTAG
-	 * 正方教务: http://jw.gdufs.edu.cn/xskbcx.aspx?xh=20111003632
+	 * @return array();
 	 */
 	function saveContent($requesUrl){
-//		$this->checkField($field);
-		
 		$ch2 = curl_init();
 		curl_setopt($ch2, CURLOPT_URL, $requesUrl);
 		curl_setopt($ch2, CURLOPT_COOKIE, $this->cookie);
@@ -116,9 +121,11 @@ class Library {
 		$content = ob_get_contents();
 		ob_end_clean();
 		
+		$info = curl_getinfo($ch2);
+		curl_close($ch2);
 		$this->pageContent = $content;
 
-		curl_close($ch2);	
+		return $info;
 	}
 	
 	
@@ -136,11 +143,16 @@ class Library {
 	 * @param string $content
 	 * @return array
 	 */
-	public function getFinalUrl($requestUrl){
-		$this->saveContent($requestUrl);
-		$content = $this->getContent();
-		$libUrl = $this->getRedirectToLibUrl($content);//1.先获取跳到图书馆页面的url，即我的流通页面
+	public function getFinalUrl($requestUrl=""){
+		if (empty($requestUrl)){
+			$requestUrl = "http://tsg.gdufs.edu.cn/gwd_local/login_ibm.jsp";
+		}
+		$result = $this->saveContent($requestUrl);
+		$libUrl = $result['redirect_url'];
+// 		$content = $this->getContent();
+// 		$libUrl = $this->getRedirectToLibUrl($content);//1.先获取跳到图书馆页面的url，即我的流通页面
 		$this->saveContent($libUrl);
+// 		var_dump($this->getContent());
 		$uriList = $this->parseLibContent($this->getContent()); //2.获取所有的页面url
 		return $uriList;
 	}
@@ -256,20 +268,21 @@ class Library {
 	 */
 	public function parseLibContent($text){
 		
+		
 		// $pattern = '#<div class="tabcontent" id="history" display="none;">(.*)<\/div>#';
 		// $pattern = '/div(.*)id="history"(.*)>(.*)<\/div>/ism';
 		
 		//$pattern = '(<!--[\w\W\r\n]*?-->)|(<script(.*)>(.|\n)*?<\/script>)';
-		
+// 		var_dump($text);
 		$noNote = $this->escapeNote($text);
 			
-		$noScript = $this->escapeScript($noNote);
-		// var_dump($noScript);
-	
+// 		$noScript = $this->escapeScript($noNote);
+		var_dump($noNote);
+		return;
 		$pattern = '#<div(.*)id="?history"?(.*)>(.|\n)*</div>#';
 		$pattern2 = '/<td class="?td1"?>(.*)<\/td>/ism';
 		$pattern3 = '/<a href="javascript:replacePage\(\'(.*)\'\);">(.*)<\/a>/i';
-		if (preg_match($pattern, $noScript, $match)) {
+		if (preg_match($pattern, $noNote, $match)) {
 			// var_dump($match[0]);
 			$text2 = $match[0];
 		}else{
