@@ -1,5 +1,5 @@
 <?php 
-class LibGw extends LibBase{
+class LibGw implements LibBase{
 	
 	public function __construct(){
 		
@@ -7,6 +7,10 @@ class LibGw extends LibBase{
 	
 	
 	public function checkField($studentNumber, $password, $formUrl='',$refer=''){
+		
+	}
+	
+	public function saveContent($requestUrl){
 		
 	}
 	
@@ -18,6 +22,7 @@ class LibGw extends LibBase{
 	public function getLoanList(){
 		echo 'gw-->getLoanList';
 	}
+	
 	
 	
 }

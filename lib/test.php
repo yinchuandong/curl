@@ -6,7 +6,7 @@ include 'Factory.php';
 
 
 $lib = Factory::createClass('LibGw');
-$lib->getLoanList();
+$lib->getHistoryList();
 
 
 
