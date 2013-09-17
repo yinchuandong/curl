@@ -23,6 +23,15 @@ class LibHg implements LibBase{
 		echo 'hg-->getLoanList';
 	}
 	
+	public function getContent(){
+		
+	}
+	
+	public function getResponseHeader(){
+		
+	}
+	
+	
 	
 }
 

@@ -26,6 +26,31 @@ interface LibBase {
 	 * 获得历史列表
 	 */
 	public function getHistoryList();
+	
+	/**
+	 * 得到页面返回的内容
+	 * @return string
+	 */
+	public function getContent();
+	
+	/**
+	 * 得到responseHeader信息
+	 * @return array
+	 */
+	public function getResponseHeader();
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
 
 ?>
