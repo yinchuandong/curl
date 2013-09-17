@@ -1,0 +1,471 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
+<!--filename: bor-renew-all-head--> 
+<html> 
+<head> 
+<!-- filename: meta-tags V1.1r013 --> 
+ 
+<META HTTP-EQUIV="Cache-Control" CONTENT="no-cache"> 
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache"> 
+<META HTTP-EQUIV="Expires" CONTENT="Sun, 06 Nov 1994 08:49:37 GMT"> 
+<META HTTP-EQUIV="REFRESH" CONTENT="1200; URL=http://opac.gdufs.edu.cn:8991/F/411DTAQUSI2GLDBFGDVYXQ4M4X9T6UNBJGJ52AXJT9QYVDJIAE-75454?func=logout"> 
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"> 
+ 
+<link rel="stylesheet" href="/opac_lcl_chi/exlchi.css" TYPE="text/css"> 
+<style> 
+.tabshead{background:url(http://opac.gdufs.edu.cn:8991/exlibris/aleph/u20_1/alephe/www_f_chi/icon/tab_bg.gif) bottom repeat-x;} 
+.topbar{background-image:url(http://opac.gdufs.edu.cn:8991/exlibris/aleph/u20_1/alephe/www_f_chi/icon/tab_bg.gif);} 
+.middlebar{background-image:url(http://opac.gdufs.edu.cn:8991/exlibris/aleph/u20_1/alephe/www_f_chi/icon/f-middle-bar.jpg);} 
+.bottombar{background-image:url(http://opac.gdufs.edu.cn:8991/exlibris/aleph/u20_1/alephe/www_f_chi/icon/f-bottom-bar.jpg);} 
+#feedbackbar,.feedbackbar{background-image:url(http://opac.gdufs.edu.cn:8991/exlibris/aleph/u20_1/alephe/www_f_chi/icon/f-feedback.jpg);} 
+</style> 
+<script src="/opac_lcl_chi/param.js"></script> 
+<script>var tmp="http://opac.gdufs.edu.cn:8991/F/411DTAQUSI2GLDBFGDVYXQ4M4X9T6UNBJGJ52AXJT9QYVDJIAE-75455";</script> 
+<script src="/opac_lcl_chi/CHI.js"></script> 
+<script src="/opac_lcl_chi/exlchi.js"></script> 
+<script> 
+var icon_path="http://opac.gdufs.edu.cn:8991/exlibris/aleph/u20_1/alephe/www_f_chi/icon/"; 
+var fmt_code={'BK':'图书','CF':'计算机文件','MP':'图','MU':'音乐资料','SE':'期刊','VM':'视频资料','MX':'多媒体资料','AB':'古籍','MM':'缩微资料','SM':'特种资料','UP':'非正规出版物','ER':'电子资源','OT':'其他'} 
+function dispfmt(fmt){ 
+   if(fmtmap[fmt]){fmt=fmtmap[fmt];} 
+   if(fmt.match(/</)){fmt="XX";} 
+   var fmt_name=fmt_code[fmt]||fmt; 
+   document.write("<img src="+icon_path+"icon"+fmt+".gif> "+fmt_name); 
+} 
+document.onclick = function() {if(g('sug'))g('sug').style.display='none';} 
+</script> 
+ 
+  <title>管理库 - 续借报告</title> 
+ 
+<script language="JavaScript"> 
+<!-- 
+   function replacePage (loc) 
+   { 
+     window.location.replace (loc); 
+  } 
+// --> 
+</script> 
+ 
+<script language="JavaScript"> 
+<!-- 
+   function collectData () 
+   { 
+     var strData = "http://opac.gdufs.edu.cn:8991/F/411DTAQUSI2GLDBFGDVYXQ4M4X9T6UNBJGJ52AXJT9QYVDJIAE-75456?func=bor-renew-all&renew_selected=Y&adm_library="; 
+     var allElements = document.getElementsByTagName("input"); 
+ 
+     var len = allElements.length; 
+     for (i=0; i<len; i++) 
+     { 
+          var el = allElements[i]; 
+          if (el.type == "checkbox" && el.checked) 
+            strData += "&" + el.name + "=" + "Y"; 
+     } 
+     return strData; 
+   } 
+// --> 
+</script> 
+ 
+</head> 
+<body topmargin="0"> 
+<!-- filename: head-replace--> 
+<script language="Javascript"> 
+<!-- 
+  function open_window (loc) 
+  { 
+    self.name="main"; 
+    if ((navigator.appVersion.indexOf("MSIE 5.0") != -1) && (navigator.appName.indexOf("Explorer") != -1)){ 
+   var w = window.open ("","win1","height=500,width=500,scrollbars,resizable"); 
+     w.document.write("<html>\n"); 
+     w.document.write('<body onLoad="window.location.href='); 
+     w.document.write("'" + loc + "';\n"); 
+     w.document.write('"'); 
+     w.document.write("</body>\n"); 
+     w.document.write("</html>\n"); 
+     w.document.close(); 
+    } else { 
+    var w = window.open (loc,"win1","height=500,width=500,scrollbars,resizable"); 
+    } 
+    w.focus(); 
+  } 
+ 
+ 
+  function open_window2 (loc) 
+  { 
+    self.name="main"; 
+    if ((navigator.appVersion.indexOf("MSIE 5.0") != -1) && (navigator.appName.indexOf("Explorer") != -1)){ 
+ 
+    var w = window.open ("", 
+                         "win1", 
+                         "height=100,width=500,scrollbars,resizable" 
+                         ); 
+     w.document.write("<html>\n"); 
+  </htmlocument.write('<body onLoad="window.location.href='); 
+     w.document.write("'" + loc + "';\n"); 
+     w.document.write('"'); 
+     w.document.write("</body>\n"); 
+     w.document.write("</html>\n"); 
+     w.document.close(); 
+    } else { 
+    var w = window.open (loc, 
+                         "win1", 
+                         "height=100,width=500,scrollbars,resizable" 
+                         ); 
+    } 
+     w.focus(); 
+  } 
+ 
+ 
+  function open_window3 (loc) 
+  { 
+    self.name="main"; 
+    if ((navigator.appVersion.indexOf("MSIE 5.0") != -1) && (navigator.appName.indexOf("Explorer") != -1)){ 
+ 
+    var w = window.open ("", 
+                         "win1", 
+                         "height=400,width=450,scrollbars,resizable,top=200" 
+                         ); 
+     w.document.write("<html>\n"); 
+     w.document.write('<body onLoad="window.location.href='); 
+     w.document.write("'" + loc + "';\n"); 
+     w.document.write('"'); 
+     w.document.write("</body>\n"); 
+     w.document.write("</html>\n"); 
+     w.document.close(); 
+    } else { 
+    var w = window.open (loc, 
+                         "win1", 
+                         "height=400,width=450,scrollbars,resizable,top=200" 
+                         ); 
+    } 
+     w.focus(); 
+  } 
+ 
+ 
+  function open_window4 (loc) 
+  { 
+    self.name="main"; 
+    if ((navigator.appVersion.indexOf("MSIE 5.0") != -1) && (navigator.appName.indexOf("Explorer") != -1)){ 
+ 
+    var w = window.open ("", 
+                         "win1", 
+
+                         "height=150,width=450,scrollbars,resizable,top=200" 
+                         ); 
+     w.document.write("<html>\n"); 
+     w.document.write('<body onLoad="window.location.href='); 
+     w.document.write("'" + loc + "';\n"); 
+     w.document.write('"'); 
+     w.document.write("</body>\n"); 
+     w.document.write("</html>\n"); 
+     w.document.close(); 
+    } else { 
+    var w = window.open (loc, 
+                         "win1", 
+                         "height=150,width=450,scrollbars,resizable,top=200" 
+                         ); 
+    } 
+     w.focus(); 
+  } 
+ 
+ 
+  function open_window_ext (loc) 
+  { 
+    self.name="main"; 
+    if ((navigator.appVersion.indexOf("MSIE 5.0") != -1) && (navigator.appName.indexOf("Explorer") != -1)){ 
+    var w = window.open ("","win2","height=500,width=500,scrollbars,resizable,toolbar,status,menubar"); 
+     w.document.write("<html>\n"); 
+     w.document.write('<body onLoad="window.location.href='); 
+     w.document.write("'" + loc + "';\n"); 
+     w.document.write('"'); 
+     w.document.write("</body>\n"); 
+     w.document.write("</html>\n"); 
+     w.document.close(); 
+    } else { 
+    var w = window.open (loc,"win2","height=500,width=500,scrollbars,resizable,toolbar,status,menubar"); 
+    } 
+    w.focus(); 
+  } 
+ 
+  function set_iframe_location(url,id){ 
+    eval('document.all.' + id).src = url; 
+  } 
+ 
+  function open_window_confirm (loc,frame) 
+  { 
+    self.name=frame; 
+    if ((navigator.appVersion.indexOf("MSIE 5.0") != -1) && (navigator.appName.indexOf("Explorer") != -1)){ 
+   var w = window.open ("","win1","height=220,width=450,scrollbars,resizable"); 
+     w.document.write("<html>\n"); 
+     w.document.write('<body onLoad="window.location.href='); 
+     w.document.write("'" + loc + "';\n"); 
+     w.document.write('"'); 
+     w.document.write("</body>\n"); 
+     w.document.write("</html>\n"); 
+     w.document.close(); 
+    } else { 
+    var w = window.open (loc,"win1","height=220,width=450,scrollbars,resizable"); 
+    } 
+    w.focus(); 
+  } 
+ 
+  function delete_win1 () 
+  { 
+    var w = window.open ("","win1","height=220,width=450,scrollbars,resizable"); 
+    w.close(); 
+  } 
+ 
+  function open_window_ill (loc) 
+  { 
+    if ((navigator.appVersion.indexOf("MSIE 5.0") != -1) && (navigator.appName.indexOf("Explorer") != -1)){ 
+  var w = window.open ("","win1","height=500,width=500,scrollbars,resizable"); 
+     w.document.write("<html>\n"); 
+     w.document.write('<body onLoad="window.location.href='); 
+     w.document.write("'" + loc + "';\n"); 
+     w.document.write('"'); 
+     w.document.write("</body>\n"); 
+     w.document.write("</html>\n"); 
+     w.document.close(); 
+    } else { 
+    var w = window.open (loc,"win1","height=500,width=500,scrollbars,resizable"); 
+    } 
+    w.focus(); 
+  } 
+ 
+// --> 
+</script> 
+ 
+<script language="javascript"> 
+<!-- 
+ function recommend(the_url){ 
+     var first_split = the_url.split("//"); 
+     var without_resource = first_split[1]; 
+     var second_split = without_resource.split(":"); 
+     var domain = second_split[0]; 
+ 
+     window.open("http://"+domain+":8118/apsm/recommend/recommend.jsp?url_id=" + the_url,"_blank"); 
+} 
+//--> 
+</script> 
+<div id=header> 
+      <a href="http://opac.gdufs.edu.cn:8991/F/411DTAQUSI2GLDBFGDVYXQ4M4X9T6UNBJGJ52AXJT9QYVDJIAE-75457?func=file&file_name=logout" class="blue" title="退出系统"> 
+      退出</a> 
+      <a href="http://opac.gdufs.edu.cn:8991/F/411DTAQUSI2GLDBFGDVYXQ4M4X9T6UNBJGJ52AXJT9QYVDJIAE-75458?func=find-b-0" title="返回检索首页" class="blue"> 
+      检索首页</a> 
+      <a href="http://opac.gdufs.edu.cn:8991/F/411DTAQUSI2GLDBFGDVYXQ4M4X9T6UNBJGJ52AXJT9QYVDJIAE-75459?func=bor-info" title="查看图书馆读者个人信息" class="blue"> 
+      我的图书馆</a> 
+      <a href="http://opac.gdufs.edu.cn:8991/F/411DTAQUSI2GLDBFGDVYXQ4M4X9T6UNBJGJ52AXJT9QYVDJIAE-75460?func=option-show&func_param=DISPLAY-OPTION" class="blue" title="设置信息显示选项"> 
+      参数设置</a> 
+      <a href="http://opac.gdufs.edu.cn:8991/F/411DTAQUSI2GLDBFGDVYXQ4M4X9T6UNBJGJ52AXJT9QYVDJIAE-75461?func=file&file_name=feedback" class="blue" title="发送有关该系统的建设性反馈意见"> 
+      反馈意见</a> 
+      <a href="javascript:recommend('http://opac.gdufs.edu.cn:8991/F/411DTAQUSI2GLDBFGDVYXQ4M4X9T6UNBJGJ52AXJT9QYVDJIAE-75462');"  class="blue"> 
+      读者荐购</a> 
+      <!--<a href=http://opac.gdufs.edu.cn:8991/F/411DTAQUSI2GLDBFGDVYXQ4M4X9T6UNBJGJ52AXJT9QYVDJIAE-75463?func=new-ill-request-l title="馆际互借请求" class=blue> 
+      馆际互借</a>--> 
+      <a href="http://opac.gdufs.edu.cn:8991/F/411DTAQUSI2GLDBFGDVYXQ4M4X9T6UNBJGJ52AXJT9QYVDJIAE-75464?func=file&file_name=hotinfo" class="blue" title="热门信息" class="blue" target="_blank"> 
+      热门信息</a> 
+      <a href="http://opac.gdufs.edu.cn:8991/F/411DTAQUSI2GLDBFGDVYXQ4M4X9T6UNBJGJ52AXJT9QYVDJIAE-75465?func=short" class="blue" title="最近一次检索结果列表"> 
+      结果列表</a> 
+      <a href="http://opac.gdufs.edu.cn:8991/F/411DTAQUSI2GLDBFGDVYXQ4M4X9T6UNBJGJ52AXJT9QYVDJIAE-75466?func=history" class="blue" title="最近检索历史"> 
+      最近检索</a> 
+      <a href="http://opac.gdufs.edu.cn:8991/F/411DTAQUSI2GLDBFGDVYXQ4M4X9T6UNBJGJ52AXJT9QYVDJIAE-75467?func=save-history-short" class="blue" title="已保存的检索历史"> 
+      检索历史</a> 
+      <a href="http://opac.gdufs.edu.cn:8991/F/411DTAQUSI2GLDBFGDVYXQ4M4X9T6UNBJGJ52AXJT9QYVDJIAE-75468?func=myshelf-short-lcl" class="blue" title="查看保存在电子书架上的记录"> 
+      电子书架</a> 
+      <a href="/help_cn/help.htm" class="blue" title="使用该系统的帮助" target="new"> 
+      帮助/a> 
+</div> 
+<div id=idxlogo><a href=http://opac.gdufs.edu.cn:8991/F/411DTAQUSI2GLDBFGDVYXQ4M4X9T6UNBJGJ52AXJT9QYVDJIAE-75469?func=find-b-0><img src="http://opac.gdufs.edu.cn:8991/exlibris/aleph/u20_1/alephe/www_f_chi/icon/opac.jpg"></a></div> 
+<div id=feedbackbar style="display:none;text-align:center">&nbsp;</div> 
+<script>if(g('feedbackbar').innerHTML.length>10){g('feedbackbar').style.display='';}</script> 
+
+<center> 
+<!-- filename: bor-include-1--> 
+<table width="100%" align="center" border="0" cellpadding="0" cellspacing="0"> 
+ 
+  <tr> 
+    <td class="bar" width="20%" align="center" nowrap> 
+      &nbsp; 
+    </td> 
+    <td class="bar" align="center" nowrap> 
+      <a href="javascript:replacePage('http://opac.gdufs.edu.cn:8991/F/411DTAQUSI2GLDBFGDVYXQ4M4X9T6UNBJGJ52AXJT9QYVDJIAE-75470?func=bor-info');" 
+         title="User Info" class="blue"> 
+      用户信息</a> 
+    </td> 
+    <td class="bar" align="center" nowrap> 
+      &nbsp;|&nbsp; 
+    </td> 
+    <td class="bar" align="center" nowrap> 
+      <a href="javascript:replacePage('http://opac.gdufs.edu.cn:8991/F/411DTAQUSI2GLDBFGDVYXQ4M4X9T6UNBJGJ52AXJT9QYVDJIAE-75471?func=bor-loan&adm_library=');" 
+         title="Loans" class="blue"> 
+      借阅信息</a> 
+    </td> 
+    <td class="bar" align="center" nowrap> 
+      &nbsp;|&nbsp; 
+    </td> 
+    <td class="bar" align="center" nowrap> 
+      <a href="javascript:replacePage('http://opac.gdufs.edu.cn:8991/F/411DTAQUSI2GLDBFGDVYXQ4M4X9T6UNBJGJ52AXJT9QYVDJIAE-75472?func=bor-hold&adm_library=');" 
+         title="Hold Requests" class="blue"> 
+      预约请求</a> 
+    </td> 
+    <td class="bar" align="center" nowrap> 
+      &nbsp;|&nbsp; 
+    </td> 
+    <td class="bar" align="center" nowrap> 
+      <a href="javascript:replacePage('http://opac.gdufs.edu.cn:8991/F/411DTAQUSI2GLDBFGDVYXQ4M4X9T6UNBJGJ52AXJT9QYVDJIAE-75473?func=bor-history-loan&adm_library=');" 
+         title="History Loans"  class="blue"> 
+      借阅历史&nbsp;</a> 
+    </td> 
+    <td class="bar" align="center" nowrap> 
+      &nbsp;|&nbsp; 
+    </td> 
+    <td class="bar" align="center" nowrap> 
+      <a href="javascript:replacePage('http://opac.gdufs.edu.cn:8991/F/411DTAQUSI2GLDBFGDVYXQ4M4X9T6UNBJGJ52AXJT9QYVDJIAE-75474?func=bor-cash&adm_library=');" 
+         title="Cash Transactions" class="blue"> 
+      现金事务</a> 
+    </td> 
+ 
+    <td class="bar" width="20%" align="center" nowrap> 
+      &nbsp; 
+    </td> 
+  <tr> 
+</table> 
+<!-- 
+<table width="100%" align="center" border="0" cellpadding="0" cellspacing="0"> 
+  <tr> 
+    <td class="bar" width="20%" align="center" nowrap> 
+      &nbsp; 
+    </td> 
+    <td class="bar" align="center" nowrap> 
+      <a href="javascript:replacePage('http://opac.gdufs.edu.cn:8991/F/411DTAQUSI2GLDBFGDVYXQ4M4X9T6UNBJGJ52AXJT9QYVDJIAE-75475?func=bor-ill');" 
+         title="ILL Request" class="blue"> 
+      馆际互借请求</a> 
+    </td> 
+    <td class="bar" align="center" nowrap> 
+      &nbsp;|&nbsp; 
+    </td> 
+    <td class="bar" align="center" nowrap> 
+      <a href="javascript:replacePage('http://opac.gdufs.edu.cn:8991/F/411DTAQUSI2GLDBFGDVYXQ4M4X9T6UNBJGJ52AXJT9QYVDJIAE-75476?func=bor-booking-req-list&adm_library=');" 
+         title="Booking Requests" class="blue"> 
+      登记请求</a> 
+    </td> 
+    <td class="bar" align="center" nowrap> 
+      &nbsp;|&nbsp; 
+    </td> 
+    <td class="bar" align="center" nowrap> 
+      <a href="javascript:replacePage('http://opac.gdufs.edu.cn:8991/F/411DTAQUSI2GLDBFGDVYXQ4M4X9T6UNBJGJ52AXJT9QYVDJIAE-75477?func=bor-title');" 
+         title="Title Request" class="blue"> 
+      题名请求</a> 
+    </td> 
+    <td class="bar" align="center" nowrap> 
+      &nbsp;|&nbsp; 
+    </td> 
+    <td class="bar" align="center" nowrap> 
+      <a href="javascript:replacePage('http://opac.gdufs.edu.cn:8991/F/411DTAQUSI2GLDBFGDVYXQ4M4X9T6UNBJGJ52AXJT9QYVDJIAE-75478?func=bor-proxy');" 
+         title="Proxies/Sponsor" class="blue"> 
+      代理人/担保人</a> 
+    </td> 
+    <td class="bar" align="center" nowrap> 
+      &nbsp;|&nbsp; 
+    </td> 
+    <td class="bar" align="center" nowrap> 
+      <a href="javascript:replacePage('http://opac.gdufs.edu.cn:8991/F/411DTAQUSI2GLDBFGDVYXQ4M4X9T6UNBJGJ52AXJT9QYVDJIAE-75479?func=bor-photo&adm_library=');" 
+         title="PhotoRequest" class="blue"> 
+      复制请求</a> 
+    </td> 
+    <td class="bar" width="20%" align="center" nowrap> 
+      &nbsp; 
+    </td> 
+  </tr> 
+</table>--> 
+<br> 
+
+<!--filename: bor-renew-all-head-not-renewed--> 
+<div class=title> 
+  管理库 - 续借不成功: 
+</div> 
+<p> 
+
+<!--filename: bor-renew-all-head-3--> 
+<table border=0 cellspacing=2> 
+ <tr class=tr1> 
+  <th>序号</th> 
+  <th>描述</th> 
+  <th>单册状态</th> 
+  <th>应还日期</th> 
+  <th>应还时间</th> 
+  <th>分馆</th> 
+  <th>条码</th> 
+  <th>单册描述</th> 
+  <th>未能续借的原因</th> 
+ </tr> 
+ 
+
+<!--filename: bor-renew-all-body--> 
+ <tr> 
+  <td class=td1 id=centered valign=top>        1</td> 
+  <td class=td1>英语词汇宝典</td> 
+  <td class=td1>已借出</td> 
+  <td class=td1>20130917</td> 
+  <td class=td1>22:00</td> 
+  <td class=td1 nowrap>南校区英文书外借分馆</td> 
+  <td class=td1>E0237575</td> 
+  <td class=td1><br></td> 
+  <td class=td1>不能再续借 (还书日期没改变)。</td> 
+ </tr> 
+
+<!--filename: bor-renew-all-body--> 
+ <tr> 
+  <td class=td1 id=centered valign=top>        2</td> 
+  <td class=td1>口笔译高频词汇词典</td> 
+  <td class=td1>已借出</td> 
+  <td class=td1>20130917</td> 
+  <td class=td1>22:00</td> 
+  <td class=td1 nowrap>南校区英文书外借分馆</td> 
+  <td class=td1>E0430938</td> 
+  <td class=td1><br></td> 
+  <td class=td1>不能再续借 (还书日期没改变)。</td> 
+ </tr> 
+
+<!--filename: bor-renew-all-body--> 
+ <tr> 
+  <td class=td1 id=centered valign=top>        3</td> 
+  <td class=td1>高等学校英语专业全程通用词汇表</td> 
+  <td class=td1>已借出</td> 
+  <td class=td1>20130917</td> 
+  <td class=td1>22:00</td> 
+  <td class=td1 nowrap>南校区英文书外借分馆</td> 
+  <td class=td1>E0156990</td> 
+  <td class=td1><br></td> 
+  <td class=td1>不能再续借 (还书日期没改变)。</td> 
+ </tr> 
+
+<!--filename: bor-renew-all-tail--> 
+ 
+</table> 
+<!-- filename: copyrights --> 
+<p id=copyright class="copyright"> 
+<br /><br />OPAC扩展程序推荐：<a href="http://userscripts.org/scripts/show/151366" target="_blank">Firefox 扩展程序</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="http://gdufs.github.io/easylib/" target="_blank">Chrome浏览器扩展程序</a>Updated!!! 
+<br /><br />阅读记忆：<a href="http://easylib.gdufslib.org/" target="_blank">Reading Memory in GDUFS </a>New!!!|&nbsp;&nbsp;Switch to <a href=# onclick="return shiftlng('xng')">English Version</a> 
+ 
+<br /><br />&copy; Ex Libris China  2012 & GDUFS Library 
+</p> 
+<script>if(self.location!=parent.location&&g('cclterm')){g('cclterm').value='';if(g('find_code'))g('find_code').options[0].selected=true;} 
+</script> 
+ 
+<script type="text/javascript"> 
+ 
+  var _gaq = _gaq || []; 
+  _gaq.push(['_setAccount', 'UA-17069376-1']); 
+  _gaq.push(['_trackPageview']); 
+ 
+  (function() { 
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true; 
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js'; 
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s); 
+  })(); 
+ 
+</script> 
+</body> 
+</html> 
+
+ 

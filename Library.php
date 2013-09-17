@@ -109,6 +109,7 @@ class Library {
 	function saveContent($requesUrl){
 		$ch2 = curl_init();
 		curl_setopt($ch2, CURLOPT_URL, $requesUrl);
+		curl_setopt($ch2, CURLOPT_FOLLOWLOCATION, 1);
 		curl_setopt($ch2, CURLOPT_COOKIE, $this->cookie);
 		// curl_setopt($ch2, CURLOPT_COOKIEFILE, dirname(__FILE__).'/cookie.txt');
 	
@@ -144,7 +145,7 @@ class Library {
 			$requestUrl = "http://tsg.gdufs.edu.cn/gwd_local/login_ibm.jsp";
 		}
 		$result = $this->saveContent($requestUrl);
-		$libUrl = $result['redirect_url'];
+		$libUrl = $result['url'];
 		$this->saveContent($libUrl);
 		$uriList = $this->parseLibContent($this->getContent()); //2.获取所有的页面url
 		return $uriList;

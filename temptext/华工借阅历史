@@ -1,0 +1,176 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+<meta content="no-cache" http-equiv="Pragma">
+<meta content="IE=7" http-equiv="X-UA-Compatible">
+<title>华南理工大学图书馆OPAC</title>
+<link href="../douban/opac/common.css" rel="stylesheet" type="text/css">
+<link href="../douban/opac/full.css" rel="stylesheet" type="text/css">
+<script src="../douban/js/common.js"></script><script src="../douban/js/jquery.min4.js" type="text/javascript"></script><script src="../douban/js/gd.js" type="text/javascript"></script><script src="../douban/js/zhongtu.js" type="text/javascript"></script>
+</head>
+<body>
+<div class="top-nav">
+<div class="bd">
+<div class="top-nav-info">欢迎您，D1130581400！<a rel="nofollow" href="../servlet/mylib.go?cmdACT=mylibrary.logout">退出</a>
+</div>
+<div class="top-nav-items">
+<ul>
+<li>
+<a href="../servlet/opac.go">简单检索</a>
+</li>
+<li>
+<a href="../servlet/opac.go?cmdACT=query.advanced">高级检索</a>
+</li>
+<li>
+<a href="../servlet/opac.go?cmdACT=recommend.form">读者荐购</a>
+</li>
+<li>
+<a href="../servlet/opac.go?cmdACT=specialbiblios">专题推荐</a>
+</li>
+<li class="on">
+<a href="../servlet/mylib.go?cmdACT=mylibrary.index&amp;method=mylib">我的图书馆</a>
+</li>
+<li style="color:#566D5E;">
+<a onClick="javascript:submitTongJieTongHuan();">通借通还</a>
+</li>
+<li>
+<a target="_blank" href="http://202.38.232.118:8080/poweb/">随书光盘下载</a>
+</li>
+<li>
+<a href="http://202.38.232.186/tpi/thesis/share/searchlogin.asp">学位论文查询</a>
+</li>
+</ul>
+</div>
+<form action="http://202.38.232.1/historyrec2/UserLoginServlet" method="POST" name="loanHistoryForm">
+<input type="hidden" name="uid" value="D1130581400"><input type="hidden" name="unionlibPwd" value="true">
+</form>
+<form action="http://202.38.232.244/gjyy/index.asp" method="POST" name="tongJieTongHuanForm">
+<input type="hidden" name="uid" value="D1130581400"><input type="hidden" name="unionlibPwd" value="true">
+</form>
+</div>
+</div>
+<div id="wrapper">
+<div id="header">
+<div class="site-nav" id="db-nav-book">
+<div class="site-nav-logo">
+<a href=""><img alt="华工图书馆" src="../douban/img/lg_book_a1.png"></a>
+</div>
+<div class="bd">
+<div class="nav-srh">
+<script language="javascript">
+            
+            function queryval_keydown(){
+            	if(event.keyCode==13){
+            		keyCode=0;
+            		if(document.forms.SEARCHFORM.VAL1.value.trim()==""){
+            			alert("请输入检索条件");
+            			return false;
+            		}
+            		document.forms.SEARCHFORM.submit();
+				}
+            }
+
+            
+            function searchFormSubmit(){
+            	if(document.forms.SEARCHFORM.FIELD2){ //高级检索FIELD2
+            		if(document.forms.SEARCHFORM.VAL1.value==""
+            		   && document.forms.SEARCHFORM.VAL2.value==""
+            		   && document.forms.SEARCHFORM.VAL3.value==""
+            		   && document.forms.SEARCHFORM.VAL4.value==""
+            		){
+            			alert("请输入检索条件");
+            			return false;
+            		}
+            	}else{
+		            if(document.forms.SEARCHFORM.VAL1.value==""){
+		            	alert("请输入检索条件");
+		            	return false;
+		            }
+		            
+            	}
+	            
+	            document.forms.SEARCHFORM.submit();
+            }
+            
+          	function submitLoanHistory(){
+          		uid = document.forms.loanHistoryForm.uid.value;
+          		if(uid=='ANONYMOUS'||uid == '' || uid == undefined || uid == null){
+          			alert("您还未登录，请登录后以继续！");
+          		}else{
+          			document.forms.loanHistoryForm.submit();
+          		}
+          	}
+          	
+          	function submitTongJieTongHuan(){
+          		uid = document.forms.tongJieTongHuanForm.uid.value;
+          		//alert(uid);
+          		if(uid=='ANONYMOUS'||uid == '' || uid == undefined || uid == null){
+          			alert("您还未登录，请登录后以继续！");
+          		}else{
+          			document.forms.tongJieTongHuanForm.submit();
+          		}
+          	}
+     
+            
+            
+            
+        </script>
+<form action="../servlet/opac.go" method="post" name="SEARCHFORM">
+<input type="hidden" name="cmdACT" value="simple.list"><input type="hidden" name="TABLE"><input type="hidden" name="RDID" value="D1130581400"><input type="hidden" name="CODE" value=""><input type="hidden" name="SCODE"><input type="hidden" name="PAGE" value=""><input value="" type="hidden" name="CLANLINK"><input value="" type="hidden" name="libcode"><input value="" name="MARCTYPE" type="hidden"><input type="hidden" name="ORGLIB" value="SCUT">
+<div class="option1">
+<select size="1" name="FIELD1"><option value="TITLE">题名</option><option value="AUTHOR">责任者</option><option value="ISBN">ISBN</option><option value="ISBN.011$a">ISSN</option><option value="PUBLISHER">出版社</option><option value="CLASSNO">分类号</option><option value="SUBJECT">主题词</option><option value="UNIONNO">统一刊号</option><option value="BARCODE">馆藏条码</option></select>
+</div>
+<div class="inp">
+<span><input maxlength="" size="22" type="text" name="VAL1" onkeydown="javascript:if(event.keyCode==13) searchFormSubmit();" value=""></span><span><input value="搜索" type="button" class="bn-srh" onclick="javascript:searchFormSubmit();"><input type="hidden" name="MODE" value="FRONT"></span>
+</div>
+</form>
+</div>
+<div class="site-nav-items">
+<ul>
+<li>
+<a href="../servlet/opac.go?cmdACT=billboard.patron">排行榜</a>
+</li>
+<li>
+<a href="../servlet/opac.go?cmdACT=expand.browse&amp;TABLE=T_CNLIBCLASS">分类浏览</a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="xbar clearfix">
+<div>
+<a href="../servlet/opac.go?cmdACT=loan.list">我的借阅</a><a href="../servlet/opac.go?cmdACT=booking.list">我的预约</a><a href="../servlet/opac.go?cmdACT=myrecommend.list">我的荐购</a><a href="../servlet/opac.go?cmdACT=finance.list">我的财经</a><span class="now"><span>我的书架</span></span><a href="../servlet/opac.go?cmdACT=reader.info">个人资料</a><a href="../servlet/opac.go?cmdACT=password.form">修改密码</a>
+</div>
+</div>
+<br>
+<form method="get" action="../servlet/opac.go" name="mybookshelf">
+<div class="style_loan">
+<table class="table_line" bgcolor="#CCCCCC" cellspacing="1" cellpadding="5" align="center" border="0" width="940">
+<tr>
+<th></th><th scope="col">题名</th><th scope="col" width="12%">责任者</th><th scope="col" width="13%">出版社</th><th scope="col" width="13%">ISBN/ISSN</th><th scope="col" width="7%">分类号</th><th scope="col" width="8%">文献类型</th>
+</tr>
+<tr>
+<td>1</td><td><a title="查看该书目的详细信息" href="../servlet/opac.go?cmdACT=query.bookdetail&amp;bookid=741012&amp;marcformat=CNMARC01&amp;libcode=&amp;source=">Java从入门到实践</a></td><td>刘升华等编著</td><td>清华大学出版社</td><td>978-7-89474-631-3</td><td>TP312JA</td><td>中文图书</td>
+</tr>
+<tr>
+<td>2</td><td><a title="查看该书目的详细信息" href="../servlet/opac.go?cmdACT=query.bookdetail&amp;bookid=608103&amp;marcformat=CNMARC01&amp;libcode=&amp;source=">HTML与CSS入门经典</a></td><td>(美) Dick Oliver, Michael Morrison著</td><td>人民邮电出版社</td><td>978-7-115-15625-9</td><td>TP312HT</td><td>中文图书</td>
+</tr>
+<tr>
+<td>3</td><td><a title="查看该书目的详细信息" href="../servlet/opac.go?cmdACT=query.bookdetail&amp;bookid=488549&amp;marcformat=CNMARC01&amp;libcode=&amp;source=">PHP和MySQL Web开发</a></td><td>(澳) Luke Welling, Laura Thomson著</td><td>机械工业出版社</td><td>7-89492-480-6</td><td>TP312PH</td><td>中文图书</td>
+</tr>
+</table>
+</div>
+</form>
+</div>
+<br>
+<div id="footer">
+<span class="fleft gray-link" id="icp">&copy;2011－ www.lib.scut.edu.cn, all rights reserved</span><span class="fright1"><a target="_blank" href="http://www.lib.scut.edu.cn/index.jsp">图书馆主页</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+    <a target="_blank" href="http://www.lib.scut.edu.cn/OPAC-operation.htm">帮助</a></span>
+</div>
+</body>
+</html>
+

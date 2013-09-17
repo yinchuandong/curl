@@ -39,8 +39,9 @@ $referUrl2 = 'http://lib.gdufs.edu.cn/bor.php';
 $user->checkField("20111003632", "yin543211");
 $uriList = $user->getFinalUrl();//得到跳转至具体页面的url，具体看函数注释
 // die;
-$content = $user->getLoanList($uriList['url'][0]); //当前借阅列表
+// $content = $user->getLoanList($uriList['url'][0]); //当前借阅列表
 // $content = $user->getHistoryList($uriList['url'][1]); //借阅历史
+$content = $user->getRenewUrl($uriList['url'][0]);
 var_dump($content);
 
 
