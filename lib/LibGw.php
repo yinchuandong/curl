@@ -1,9 +1,16 @@
 <?php 
-class LibGw implements LibBase{
+class LibGw extends LibBase{
 	
 	public function __construct(){
 		
 	}
+	
+	
+	public function checkField($studentNumber, $password, $formUrl='',$refer=''){
+		
+	}
+	
+	
 	public function getHistoryList(){
 		echo 'gw-->getHistoryList';
 	}

@@ -1,5 +1,5 @@
 <?php 
-class LibHg implements LibBase{
+class LibHg extends LibBase{
 	
 	public function getHistoryList(){
 		echo 'hg-->getHistoryList';
