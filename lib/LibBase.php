@@ -40,6 +40,15 @@ abstract class LibBase {
 	public abstract function getResponseHeader();
 	
 	
+	/**
+	 * 续借图书
+	 * @param string $bookId
+	 */
+	public abstract function renew($bookId);
+	
+	
+	
+	//===================公共函数====================================
 	
 	/**
 	 * 从返回的内容中提取出cookie
@@ -66,7 +75,22 @@ abstract class LibBase {
 		return $match[4];
 	}
 	
+	/**
+	 * 去除html注释
+	 * @param string $text
+	 */
+	public function escapeNote($text){
+		return preg_replace('/<!--[\w\W\r\n]*?-->/i', "", $text);
+	}
 	
+	/**
+	 * 去除script标签
+	 * @param string $text
+	 * @return string
+	 */
+	public function escapeScript($text){
+		return preg_replace('/<script(.*)>(.|\n)*?<\/script>/i', "", $text);
+	}
 	
 	
 	

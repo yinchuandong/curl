@@ -149,8 +149,14 @@ class LibGw extends LibBase{
 		}
 	}
 	
+	
 	public function renew($bookId){
-		
+		$uriList = $this->getFinalUrl();
+		$url = $this->getRenewUrl($uriList['url'][0]);
+		$url = $url['renewApart'];
+		$url .= '&'.$bookId.'=Y';
+		$this->saveContent($url);
+		return $this->getContent();
 	}
 	
 	
@@ -320,23 +326,18 @@ class LibGw extends LibBase{
 		return '/'.$regular.'/i';
 	}
 	
-	//===================公共函数====================================
 	/**
-	 * 去除html注释
-	 * @param string $text
+	 * 获得续借返回信息的正则表达式
 	 */
-	private function escapeNote($text){
-		return preg_replace('/<!--[\w\W\r\n]*?-->/i', "", $text);
+	private function getRenewRegular(){
+		$regular = '';
+		$regular .= '';
+		
+		return $regular;
 	}
 	
-	/**
-	 * 去除script标签
-	 * @param string $text
-	 * @return string
-	 */
-	private function escapeScript($text){
-		return preg_replace('/<script(.*)>(.|\n)*?<\/script>/i', "", $text);
-	}
+	
+	
 	
 	
 	

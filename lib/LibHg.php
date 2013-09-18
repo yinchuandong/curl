@@ -31,6 +31,9 @@ class LibHg extends LibBase{
 		
 	}
 	
+	public function renew($bookId){
+		
+	}
 
 	
 	
