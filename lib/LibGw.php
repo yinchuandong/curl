@@ -1,5 +1,5 @@
 <?php 
-class LibGw implements LibBase{
+class LibGw extends LibBase{
 	
 	public $responseHeader = '';
 	public $pageContent = '';//保存返回的页面内容
@@ -149,6 +149,11 @@ class LibGw implements LibBase{
 		}
 	}
 	
+	public function renew($bookId){
+		
+	}
+	
+	
 	/**
 	 * 得到续借的url
 	 * 1，http://opac.gdufs.edu.cn:8991/F/T8RKYKUS9U8I63IFIR5HUC7SSSJLBQ7TA8LPE6S5L4YUY3D4AF-01289 解析为：
@@ -176,10 +181,8 @@ class LibGw implements LibBase{
 			echo 'Library getAuthTmpUrl false';
 			return null;
 		}
-	
-	
-		// 		var_dump($content);
 	}
+	
 	
 	public function getResponseHeader(){
 		return $this->responseHeader;
@@ -210,17 +213,7 @@ class LibGw implements LibBase{
 		return $uriList;
 	}
 	
-	/**
-	 * 从返回的内容中提取出cookie
-	 * @param String $responseHeader
-	 */
-	private function parseResponseCookie($responseHeader){
-		list($header, $body) = explode("\r\n\r\n", $responseHeader);
-		preg_match_all("/set\-cookie:([^\r\n]*)/is", $header, $matches);
-		foreach ($matches[1] as $value) {
-			$this->cookie .= $value.'; ';
-		}
-	}
+
 	
 	
 	/**
@@ -267,6 +260,8 @@ class LibGw implements LibBase{
 		}
 	
 	}
+	
+	
 	
 	/**
 	 * 获得借书列表的正则表达式;

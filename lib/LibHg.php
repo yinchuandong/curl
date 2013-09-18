@@ -1,5 +1,5 @@
 <?php 
-class LibHg implements LibBase{
+class LibHg extends LibBase{
 	
 	public function __construct(){
 	
@@ -31,6 +31,7 @@ class LibHg implements LibBase{
 		
 	}
 	
+
 	
 	
 }
