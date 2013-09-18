@@ -43,6 +43,7 @@ abstract class LibBase {
 	/**
 	 * 续借图书
 	 * @param string $bookId
+	 * @return string 成功或者不成功的提示
 	 */
 	public abstract function renew($bookId);
 	

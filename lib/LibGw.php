@@ -156,7 +156,16 @@ class LibGw extends LibBase{
 		$url = $url['renewApart'];
 		$url .= '&'.$bookId.'=Y';
 		$this->saveContent($url);
-		return $this->getContent();
+		$content = $this->getContent();
+		$pattern = $this->getRenewRegular();
+		if (preg_match('/<div class=title>(.|\n)*<\/div>/i', $content, $match)){
+			$result = explode("-", trim($match[0]));
+			$result = preg_replace("/\:/i", "", $result[1]);
+			return $result;
+		}else{
+			echo 1;
+		}
+		
 	}
 	
 	
@@ -330,9 +339,7 @@ class LibGw extends LibBase{
 	 * 获得续借返回信息的正则表达式
 	 */
 	private function getRenewRegular(){
-		$regular = '';
-		$regular .= '';
-		
+		$regular = '/<div class=title>(.|\n)*?<\/div>/i';
 		return $regular;
 	}
 	
