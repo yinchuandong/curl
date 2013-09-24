@@ -110,6 +110,7 @@ class LibHg extends LibBase{
 				$matches[4][$i] = $this->baseUrl.$matches[4][$i];
 			}
 			$result = array(
+				'order'=>$matches[1],
 				'url'=>$matches[4],
 				'title'=>$matches[5],
 				'author'=>$matches[6]
