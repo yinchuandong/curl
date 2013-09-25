@@ -159,8 +159,8 @@ class LibGw extends LibBase{
 		$content = $this->getContent();
 		$pattern = $this->getRenewRegular();
 		if (preg_match('/<div class=title>(.|\n)*<\/div>/i', $content, $match)){
-			$result = explode("-", trim($match[0]));
-			$result = preg_replace("/\:/i", "", $result[1]);
+			$result = explode("-", strip_tags(trim($match[0])));
+			$result = preg_replace("/(\:|\n)/i", "", $result[1]);
 			return $result;
 		}else{
 			echo 1;
