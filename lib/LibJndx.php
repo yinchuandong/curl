@@ -124,7 +124,8 @@ class LibJndx extends LibBase{
 // 		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 		curl_setopt($ch, CURLOPT_POST, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $param);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);//跟随跳转
+// 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);//跟随跳转
+		curl_setopt($ch, CURLOPT_COOKIEJAR, dirname(__FILE__).'/cookie.txt');
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 	
@@ -133,11 +134,11 @@ class LibJndx extends LibBase{
 		$info = curl_getinfo($ch);
 		curl_close($ch);
 	
-		$this->parseResponseCookie($content);//从返回的内容中提取出cookie
+// 		$this->parseResponseCookie($content);//从返回的内容中提取出cookie
 	
 		var_dump($info);
 		var_dump($content);
-		var_dump($this->cookie);
+// 		var_dump($this->cookie);
 	
 		
 	}
