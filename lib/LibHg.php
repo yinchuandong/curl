@@ -122,7 +122,25 @@ class LibHg extends LibBase{
 	}
 	
 	public function getLoanList(){
-// 		echo 'hg-->getLoanList';
+		$loanUrl = $this->baseUrl.'opac.go?cmdACT=loan.list';
+		$this->saveContent($loanUrl);
+		$content = $this->getContent();
+		$pattern = $this->getLoanListRegular();
+		
+		if (preg_match_all($pattern, $content, $match)){
+			$len = count($match[4]);
+			for ($i=0; $i< $len; $i++){
+				$match[4][$i] = $this->baseUrl.$match[4][$i];
+				$match[10][$i] = str_replace('-', '', $match[10][$i]);
+			}
+			$result = array(
+					'id' => $match[2],
+					'url' => $match[4],
+					'title' => $match[5],
+					'returnDate' => $match[10]
+			);
+			return $result;
+		}
 		return null;
 	}
 	
@@ -135,10 +153,19 @@ class LibHg extends LibBase{
 	}
 	
 	public function renew($bookId){
-		return null;
+		$renewUrl = $this->baseUrl.'opac.go?cmdACT=mylibrary.reloan&BARCODE='.$bookId.'&libcode=';
+		$this->saveContent($renewUrl);
+		$content = $this->getContent();
+		$pattern = '/<\/html><script language=\"javascript\">(.|\n)*?alert\(\'(.*)\'\)/i';
+		if (preg_match($pattern, $content, $match)){
+			return $match[2];
+		}else{
+			return '服务器错误';
+		}
+		
 	}
 	
-/**
+	/**
 	 * 获取借书历史记录的正则表达式
 	 * @return string
 	 */
@@ -155,6 +182,17 @@ class LibHg extends LibBase{
 		return '/'.$regular.'/i';
 	}
 	
+	private function getLoanListRegular(){
+		$regular = '';
+		$regular .= '<td>(\d*)<\/td><td>(\w*)<\/td>';
+		$regular .= '<td><a(.*)href=\"\.\.\/servlet\/(.*?)\">(.*?)<\/a><\/td>';
+		$regular .= '<td>(.*?)<\/td>';
+		$regular .= '<td>(.*?)<\/td>';
+		$regular .= '<td>(.*?)<\/td>';
+		$regular .= '<td>(.*?)<\/td>';
+		$regular .= '<td>(.*?)<\/td>';
+		return '/'.$regular.'/i';
+	}
 
 	
 	
