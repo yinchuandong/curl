@@ -98,33 +98,12 @@ class LibJndx extends LibBase{
 			$param .= "$key=".urlencode($value)."&";
 		}
 		$param = substr($param, 0,-1);
-		$host = $this->parseHost($formUrl);
-		$origin = 'http://'.$host;
-	
-	
-		$header = array(
-				'POST /patroninfo*chx HTTP/1.1',
-				'Host: '.$host,
-				'Connection: keep-alive',
-				'Content-Length: '.strlen($param),
-				'Cache-Control: max-age=0',
-				'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-				'Origin: '.$origin,
-				'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.12 Safari/537.31',
-				'Content-Type: application/x-www-form-urlencoded',
-				'Referer: '.$refer,
-				'Accept-Encoding: gzip,deflate,sdch',
-				'Accept-Language: zh-CN,zh;q=0.8',
-				'Accept-Charset: GBK,utf-8;q=0.7,*;q=0.3',
-					
-		);
+		
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $formUrl);
-// 		curl_setopt($ch, CURLOPT_HEADER, true);
-// 		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 		curl_setopt($ch, CURLOPT_POST, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $param);
-// 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);//跟随跳转
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);//跟随跳转
 		curl_setopt($ch, CURLOPT_COOKIEJAR, dirname(__FILE__).'/cookie.txt');
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLINFO_HEADER_OUT, true);
@@ -135,8 +114,8 @@ class LibJndx extends LibBase{
 		curl_close($ch);
 	
 // 		$this->parseResponseCookie($content);//从返回的内容中提取出cookie
-	
-		var_dump($info);
+// 		$this->saveContent($info['url']);
+// 		var_dump($info);
 		var_dump($content);
 // 		var_dump($this->cookie);
 	
@@ -149,7 +128,8 @@ class LibJndx extends LibBase{
 		curl_setopt($ch2, CURLOPT_POST, 1);
 		curl_setopt($ch2, CURLOPT_POSTFIELDS, 'code=0000156268&name=陈湘琪');
 		curl_setopt($ch2, CURLOPT_FOLLOWLOCATION, 1);
-		curl_setopt($ch2, CURLOPT_COOKIE, $this->cookie);
+// 		curl_setopt($ch2, CURLOPT_COOKIE, $this->cookie);
+		curl_setopt($ch2, CURLOPT_COOKIEFILE, dirname(__FILE__).'/cookie.txt');
 		
 		ob_start();
 		curl_exec($ch2);
