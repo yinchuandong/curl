@@ -102,7 +102,7 @@ class LibGw extends LibBase{
 	
 	public function getHistoryList(){
 		$urilist = $this->getFinalUrl();
-		$url = $urilist['url'][1]; 
+		$url = $urilist['url'][1];
 		$this->saveContent($url);
 		$content = $this->getContent();
 		$content = $this->escapeNote($content);

@@ -10,8 +10,7 @@ class Factory{
 		try {
 			$dir = dirname(__FILE__);
 			include $dir.'/LibBase.php';
-			include $dir.'/LibGw.php';
-			include $dir.'/LibHg.php';
+			include $dir.'/'.$className.'.php';
 			$reflect = new ReflectionClass($className);
 			$gw = $reflect->newInstance();
 		} catch (Exception $e) {
