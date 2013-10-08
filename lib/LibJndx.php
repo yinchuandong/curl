@@ -132,7 +132,7 @@ class LibJndx extends LibBase{
 			curl_close($ch2);
 			
 			$this->pageContent = $content;
-			var_dump($content);die;
+// 			var_dump($content);die;
 			$this->responseHeader = $info;
 		}
 		
@@ -187,23 +187,17 @@ class LibJndx extends LibBase{
 		}		
 		
 		$this->checkCode($user['code'], $user['name'], false);
-		$pattern = $this->getLoanListRegular();
+		$pattern = $this->getHistoryListRegular();
 		$content = $this->getContent();
-		var_dump($content);die;
 		if (preg_match_all($pattern, $content, $matches)){
-// 			var_dump($matches);
-			$len = count($matches[8]);
+			$len = count($matches[1]);
 			for ($i=0; $i<$len; $i++){
-				$matches[6][$i] = $matches[4][$i].'-'.$matches[6][$i];
-				$matches[8][$i] = $this->baseUrl.$matches[8][$i];
-				$matches[15][$i] = '20'.$matches[15][$i];
+				$matches[1][$i] = $this->baseUrl.$matches[1][$i];
 			}
 			$result = array(
-				'id'=>$matches[6],
-				'url'=>$matches[10],
-				'title'=>$matches[11],
-				'author'=>$matches[13],
-				'returnDate'=>$matches[17]
+				'url'=>$matches[1],
+				'title'=>$matches[2],
+				'author'=>$matches[5],
 			);
 			return $result;
 		}else{
@@ -249,14 +243,39 @@ class LibJndx extends LibBase{
 	}
 	
 	public function renew($bookId){
-		$renewUrl = $this->baseUrl.'opac.go?cmdACT=mylibrary.reloan&BARCODE='.$bookId.'&libcode=';
-		$this->saveContent($renewUrl);
-		$content = $this->getContent();
-		$pattern = '/<\/html><script language=\"javascript\">(.|\n)*?alert\(\'(.*)\'\)/i';
+		$renewUrl = 'http://202.116.13.244/patroninfo~S1*chx/1064065/items';
+		if (($user = $this->getCode()) == null){
+			return null;
+		}
+		$temp = 'renew0-i3643968';
+		list($renew,$id) = explode('-', $bookId);
+		$this->checkCode($user['code'], $user['name']);
+		$form = array(
+				'currentsortorder'=>'current_checkout',
+				$renew => $id,
+				'currentsortorder'=>'current_checkout',
+				'renewsome'=>'是'
+		);
+		$ch2 = curl_init();
+		curl_setopt($ch2, CURLOPT_URL, $renewUrl);
+		curl_setopt($ch2, CURLOPT_POST, 1);
+		curl_setopt($ch2, CURLOPT_POSTFIELDS, $form);
+		curl_setopt($ch2, CURLOPT_FOLLOWLOCATION, 1);
+		curl_setopt($ch2, CURLOPT_COOKIEFILE, dirname(__FILE__).'/jndx_cookie.txt');
+			
+		ob_start();
+		curl_exec($ch2);
+		$content = ob_get_contents();
+		ob_end_clean();
+		$info = curl_getinfo($ch2);
+		curl_close($ch2);
+		
+		var_dump($content);die;
+		$pattern = '/<font color=\"red\">(.*?)<\/font>/i';
 		if (preg_match($pattern, $content, $match)){
-			return $match[2];
+			return trim($match[1]);
 		}else{
-			return '服务器错误';
+			return '续借成功';
 		}
 		
 	}
@@ -268,13 +287,9 @@ class LibJndx extends LibBase{
 	private function getHistoryListRegular(){
 		$regular = '';
 		//获得第一个通配符 
-		$regular .= '<td>(.)*?<\/td>';
-		$regular .= '<td>(.|\n)*?<a(.*?)href=\"\.\.\/servlet\/(.*)\">(.*)<\/a><\/td>'; // url, 书名
-		$regular .= '<td>(.*)<\/td>'; //作者
-		$regular .= '<td>(.*)<\/td>'; //出版社
-		$regular .= '<td>(.*)<\/td>'; //isbn
-		$regular .= '<td>(.*)<\/td>'; //分类号
-		$regular .= '<td>(.*)<\/td>(.|\n)*?'; //文献类型
+		$regular .= '<td width=\"30\%\"><a href=\"\/(.*?)\">';//url
+		$regular .= '<span class="patFuncTitleMain">(.*?)\ (.|\n)*?'; // 书名
+		$regular .= '<td(.*)class=\"patFuncAuthor\">(.*?)\ (.*)<\/td>'; //作者
 		return '/'.$regular.'/i';
 	}
 	
