@@ -90,8 +90,6 @@ class LibJndx extends LibBase{
 		$refer = 'http://libgp.jnu.edu.cn/users/goOpac.action';
 	
 		$field = array(
-// 				'code'=>'0000155482',
-// 				'name'=>'李宜桓',
 				'code'=>$code,
 				'name'=>$name,
 		);
@@ -247,7 +245,6 @@ class LibJndx extends LibBase{
 		if (($user = $this->getCode()) == null){
 			return null;
 		}
-		$temp = 'renew0-i3643968';
 		list($renew,$id) = explode('-', $bookId);
 		$this->checkCode($user['code'], $user['name']);
 		$form = array(
@@ -270,7 +267,8 @@ class LibJndx extends LibBase{
 		$info = curl_getinfo($ch2);
 		curl_close($ch2);
 		
-		var_dump($content);die;
+// 		var_dump($info);
+// 		var_dump($content);die;
 		$pattern = '/<font color=\"red\">(.*?)<\/font>/i';
 		if (preg_match($pattern, $content, $match)){
 			return trim($match[1]);
