@@ -145,7 +145,7 @@ class LibJndx extends LibBase{
 		curl_setopt($ch2, CURLOPT_URL, $requestUrl);
 		curl_setopt($ch2, CURLOPT_FOLLOWLOCATION, 1);
 		curl_setopt($ch2, CURLOPT_COOKIE, $this->cookie);
-		curl_setopt($ch2, CURLOPT_COOKIEFILE, dirname(__FILE__).'/jndx_cookie.txt');
+// 		curl_setopt($ch2, CURLOPT_COOKIEFILE, dirname(__FILE__).'/jndx_cookie.txt');
 		
 		ob_start();
 		curl_exec($ch2);
