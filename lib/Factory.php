@@ -10,7 +10,7 @@ class Factory{
 		try {
 			$dir = dirname(__FILE__);
 			include $dir.'/LibBase.php';
-			include $dir.'/'.$className.'.php';
+			include $dir.'/model/'.$className.'.php';
 			$reflect = new ReflectionClass($className);
 			$gw = $reflect->newInstance();
 		} catch (Exception $e) {
