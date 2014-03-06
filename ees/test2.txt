@@ -1,0 +1,56 @@
+HTTP/1.1 200 OK
+Date: Wed, 08 Jan 2014 09:50:55 GMT
+Server: Apache/2.2.8 (Win32) PHP/5.2.6
+X-Powered-By: PHP/5.2.6
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+Pragma: no-cache
+Content-Length: 1761
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+Content-Type: text/html
+
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=9" />
+<title>学生页面</title>
+<link href="../css/MainBasic.css" rel="stylesheet" type="text/css" media="all" />
+<script type="text/javascript" src="../js/jquery.js"></script>
+<script type="text/javascript" src="../js/studentmain.js"></script>
+</head>
+<body>
+<script type="text/javascript" src="../js/exit.js"></script>
+<div id="wrapper">
+
+    <div id="header">
+	<h1 style="visibility:hidden;">English Exam System</h1>
+	<form name="exitsession" id="exitsession" action="../exitsession.php" method="post">
+	<div class="loginstatus">
+	<h2 class='stuname'>尹川东</h2><h2>学号:20111003632</h2>        </div>
+        
+        <input type="submit" id="exitbutton" value="退出登录">
+	</form>
+</div>	
+	<div id="main">
+	        <ul id="sidebar">
+        	<li onclick="set_iframe('pushstatus')"  id="navi">系统推送</li>
+                <li onclick="set_iframe('exercise')"  id="navi">自主练习</li>
+                <li onclick="set_iframe('classexercise')"  id="navi">课堂练习</li>
+                <li onclick="set_iframe('mistakesBook')"  id="navi">错题本</li>
+                <li onclick="set_iframe('change_password')"  id="navi">修改密码</li>
+                <li onclick="set_iframe('translation')"  id="navi">段落翻译</li>
+                <li onclick="set_iframe('exam')"  id="navi">考试</li>
+         	</ul>
+		
+         <iframe  id="right_iframe" src="pushstatus.php" >
+         </iframe>
+      </div>
+	 <div id = "footer">
+    	<p>All rights reserved.</p>
+    </div>
+	
+</div>
+</body>
+</html>
