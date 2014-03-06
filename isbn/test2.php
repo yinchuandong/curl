@@ -1,6 +1,6 @@
 <?php 
 include 'CoverHelper.php';
-
-CoverHelper::getCover("对联入门");
+$helper = new CoverHelper();
+var_dump($helper->getBookByIsbn("9787101056686"));
 
 ?>
