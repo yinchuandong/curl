@@ -1,6 +1,6 @@
 <?php 
 
-include 'Factory.php';
+include 'lib/factory.class.php';
 
 header('Content-type:text/html; charset=utf-8');
 
@@ -34,7 +34,7 @@ header('Content-type:text/html; charset=utf-8');
 
 // =======广外=====================
 $lib = Factory::createClass('LibGw');
-if($lib->checkField("20111003632", "yincd520")){
+if(($userInfo = $lib->checkField("20111003632", "yincd520")) != false){
 	var_dump($lib->getHistoryList());echo 2;die;
 
 }else{
@@ -43,9 +43,10 @@ if($lib->checkField("20111003632", "yincd520")){
 
 //=========华工=========
 // $lib = Factory::createClass('LibHg');
-// if($lib->checkField("D1130580120", "801211")){
-// 	var_dump($lib->getHistoryList());echo 2;die;
-
+// if(($userinfo = $lib->checkField("D1130580120", "801211")) != false){
+// 	var_dump($lib->getHistoryList());
+// // 	var_dump($userinfo);
+	
 // }else{
 // 	echo 0;
 // }

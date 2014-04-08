@@ -1,12 +1,25 @@
 <?php 
 abstract class LibBase {
+	
 	/**
-	 * 检查用户名密码是否正确
+	 * 保存从页面解析的cookie
+	 */
+	protected $cookie = '';
+	
+	/**
+	 * 文件名：保存通过curl自带的解析cookie，可用可不用
+	 * */
+	protected $cookieFile = '';
+	
+	/**
+	 * 检查用户名密码是否正确 
+	 * 如果失败，返回false；
+	 * 如果成功，返回user数组：{username//用户名, academy//学院,major//专业, grade//毕业年份}
 	 * @param String $studentNumber
 	 * @param String $password
 	 * @param String $formUrl
 	 * @param String $refer
-	 * @return bool
+	 * @return 如果失败，返回false；成功，返回user数组
 	 */
 	public abstract function checkField($studentNumber, $password, $formUrl='',$refer='');	
 	
@@ -19,11 +32,22 @@ abstract class LibBase {
 	
 	/**
 	 * 获得借阅列表
+	 * 返回字段:
+	 * loanId 借阅的id，续借需要依据它
+	 * url 这本书的url
+	 * title 书名
+	 * author 作者
+	 * returnTime 应还时间
 	 */
 	public abstract function getLoanList();
 	
 	/**
 	 * 获得历史列表
+	 * 返回字段：
+	 * ordered 当前记录的顺序
+	 * url 这本书的url
+	 * title 书名
+	 * author 作者
 	 */
 	public abstract function getHistoryList();
 	
@@ -46,6 +70,15 @@ abstract class LibBase {
 	 * @return string 成功或者不成功的提示
 	 */
 	public abstract function renew($bookId);
+	
+	/**
+	 * 生成请求的地址
+	 * @param string $schoolNumber 学号
+	 * @param int $type 类型： 1为正方管理系统>>我的信息；2为正方管理系统>>我的课表；3为学工管理>>我的基本信息；4为学工管理>>我的宿舍信息
+	 */
+	public abstract function getRequestUrl($schoolNumber, $type);
+
+	
 	
 	
 	
@@ -91,6 +124,17 @@ abstract class LibBase {
 	 */
 	public function escapeScript($text){
 		return preg_replace('/<script(.*)>(.|\n)*?<\/script>/i', "", $text);
+	}
+	
+	
+	/**
+	 * 清除用户登陆的cookie文件
+	 */
+	public function closeCookie(){
+		$fileName = $this->cookieFile;
+		if (file_exists($fileName)) {
+			@unlink($fileName);
+		}
 	}
 	
 	

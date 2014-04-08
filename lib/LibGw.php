@@ -1,9 +1,18 @@
 <?php 
 class LibGw extends LibBase{
 	
-	public $responseHeader = '';
-	public $pageContent = '';//保存返回的页面内容
-	public $cookie = '';
+	private $responseHeader = '';
+	private $pageContent = '';//保存返回的页面内容
+	
+	/**
+	 * 保存从页面解析的cookie
+	 */
+	protected  $cookie = '';
+	/**
+	 * 文件名：保存通过curl自带的解析cookie，可用可不用
+	 * */
+	protected $cookieFile = '';
+	private $firstContent = '';//不知道这个干什么用
 	
 	public function __construct(){
 		
@@ -50,26 +59,32 @@ class LibGw extends LibBase{
 				'Accept-Charset: GBK,utf-8;q=0.7,*;q=0.3',
 					
 		);
+		
+		//将cookie写入文件中
+		$this->cookieFile = dirname(__FILE__).'/cookie/'.'LibGw'.$studentNumber.'.txt';
+		
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $formUrl);
 		curl_setopt($ch, CURLOPT_HEADER, true);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 		curl_setopt($ch, CURLOPT_POST, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $param);
-		// curl_setopt($ch, CURLOPT_COOKIEJAR, dirname(__FILE__).'/cookie.txt');
+// 		curl_setopt($ch, CURLOPT_COOKIEJAR, $this->cookieFile);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);//跟随跳转
 		
 		// 抓取URL并把它传递给浏览器
 		$content = curl_exec($ch);
-		// $this->responseInfo = curl_getinfo($ch);
 		curl_close($ch);
-		
 		$this->parseResponseCookie($content);//从返回的内容中提取出cookie
 		
+		
 		$pattern ='#<TITLE>Success<\/TITLE>#';
+		
 		if(preg_match($pattern, $content)){
-			return true;
+			$userInfo = $this->getUserInfo($studentNumber);
+			return $userInfo;
 		}else{
 			return false;
 		}
@@ -97,6 +112,16 @@ class LibGw extends LibBase{
 		$this->pageContent = $content;
 		$this->responseHeader = $info;
 		return $info;
+	}
+	
+	public function getUserInfo($studentNumber){
+		$url = $this->getRequestUrl($studentNumber,3);
+		$this->saveContent($url);
+		$userInfo['username'] =  $this->getName(3);
+		$userInfo['academy'] = $this->getAcademy(3);
+		$userInfo['grade'] = $this->getGrade(3);
+		$userInfo['major'] = $this->getMajor(3);
+		return $userInfo;
 	}
 	
 	
@@ -134,12 +159,12 @@ class LibGw extends LibBase{
 		$content = $this->escapeNote($content);
 		$pattern = $this->getLoanListRegular();
 		if(preg_match_all($pattern, $content, $matches)){
-			$result['id'] = $matches[5];
+			$result['loanId'] = $matches[5];
 			$result['author'] = $matches[8];
 			$result['url'] = $matches[11];
 			$result['title'] = $matches[12];
 			$result['publishYear'] = $matches[15];
-			$result['returnDate'] = $matches[18];
+			$result['returnTime'] = $matches[18];
 			$result['payment'] = $matches[21];//这里有点问题，因为我没有欠钱，所以看不到
 			$result['location'] = $matches[24];
 			$result['callNumber'] = $matches[27];
@@ -158,15 +183,22 @@ class LibGw extends LibBase{
 		$this->saveContent($url);
 		$content = $this->getContent();
 		$pattern = $this->getRenewRegular();
-		if (preg_match('/<div class=title>(.|\n)*<\/div>/i', $content, $match)){
-			$result = explode("-", strip_tags(trim($match[0])));
+		if (preg_match('/<div class=title>(.|\n)*?([\s\S]*)<\/div>/i', $content, $match)){
+			$result = explode("-", strip_tags(trim($match[2])));
 			$result = preg_replace("/(\:|\n)/i", "", $result[1]);
-			return $result;
+			$result = trim($result);
+			if($result == "续借不成功"){
+				return false;
+			}else{
+				return true;
+			}
 		}else{
-			echo 1;
+			return false;
 		}
 		
 	}
+	
+
 	
 	
 	/**
@@ -245,25 +277,9 @@ class LibGw extends LibBase{
 	private function parseLibContent($text){
 	
 		$noNote = $this->escapeNote($text);
-		$noScript = $this->escapeScript($noNote);
-		$pattern = '#<div(.*)id="?history"?(.*)>(.|\n)*</div>#';
-		$pattern2 = '/<td class="?td1"?>(.*)<\/td>/ism';
 		$pattern3 = '/<a href="javascript:replacePage\(\'(.*)\'\);">(.*)<\/a>/i';
-		if (preg_match($pattern, $noNote, $match)) {
-			// var_dump($match[0]);
-			$text2 = $match[0];
-		}else{
-			var_dump('false1'.$text);die;
-		}
-	
-		if (preg_match($pattern2, $text2, $match2)) {
-			// var_dump($match2);
-			$text3 = $match2[0];
-		}else{
-			echo 'false2;'; die;
-		}
-	
-		if (preg_match_all($pattern3, $text3, $match3)) {
+		
+		if (preg_match_all($pattern3, $noNote, $match3)) {
 			// 			var_dump($match3[2]);
 			$result = array(
 					'url' => $match3[1],
@@ -344,24 +360,193 @@ class LibGw extends LibBase{
 	}
 	
 	
+	/**
+	 * 生成请求的地址
+	 * @param string $schoolNumber 学号
+	 * @param int $type 类型： 1为正方管理系统>>我的信息；2为正方管理系统>>我的课表；3为学工管理>>我的基本信息；4为学工管理>>我的宿舍信息
+	 * @return string $requstUrl 返回请求的地址
+	 */
+	public function getRequestUrl($schoolNumber, $type){
+		$requestUrl = '';
+		switch ($type){
+			case 1:
+				$requestUrl = 'http://jw.gdufs.edu.cn/xsgrxx.aspx?xh='.$schoolNumber;
+				break;
+			case 2:
+				$requestUrl = 'http://jw.gdufs.edu.cn/xskbcx.aspx?xh='.$schoolNumber;
+				break;
+			case 3:
+				$requestUrl = 'http://xg.gdufs.edu.cn/epstar/app/template.jsp?mainobj=SWMS/XSJBXX/T_XSJBXX_XSJBB&tfile=XGMRMB/detail_BDTAG';
+				break;
+			case 4:
+				$requestUrl = "http://xg.gdufs.edu.cn/epstar/app/template.jsp?mainobj=SWMS/SSGLZXT/SSAP/V_SS_SSXXST&tfile=XSCKMB/BDTAG&filter=V_SS_SSXXST:XH='".$schoolNumber."'";
+				break;
+			default:
+				$requestUrl = 'http://jw.gdufs.edu.cn/xsgrxx.aspx?xh='.$schoolNumber;
+	
+		}
+		return $requestUrl;
+	}
 	
 	
+	function getName($from = 1){
+		$content = $this->getContent();
+		if ($from ==1 ){
+			$pattern ='#(<span id=\"xm\">)(.*)(<\/span>)#';
+		}else{
+			$pattern = '#(<font id=\"XM\" value=\"(.+)\">)(.*)(<\/font>)#';
+		}
 	
+		if (preg_match($pattern, $content,$match)) {
+			return $match[2];
+		}else{
+			return NULL;
+		}
+	}
 	
+	/**
+	 * 从哪里获取学号
+	 * @param int $from 1为正方管理系统；2为学工管理
+	 * @return mixed null or string
+	 */
+	function getStudentNumber($from=1){
+		if ($from ==1 ){
+			$pattern ='#(<span id=\"xh\">)(.*)(<\/span>)#';
+		}else{
+			$pattern = '#(<font id=\"XH\" value=\"(\d){10,13}\">)(.*)(<\/font>)#';
+		}
 	
+		$content = $this->getContent();
+		if (preg_match($pattern, $content,$match)) {
+				
+			return $match[3];
+		}else{
+			return NULL;
+		}
+	}
 	
+	/**
+	 * 从哪里获取学院
+	 * @param int $from 1为正方管理系统；2为学工管理
+	 * @return mixed null or string
+	 */
+	function getAcademy($from = 1){
+		if ($from ==1 ){
+			$pattern ='#(<span id=\"lbl_xy\">)(.*)(<\/span>)#';
+			$position = 2;
+		}elseif($from == 3){
+			$pattern = '#(<font id=\"YXSH\" value=\"(\w){4,8}\">)(.*)(<\/font>)#';
+			$position = 3;
+		}else{
+			$pattern = '#(<font id=\"YX\" value=\"(\w){4,8}\">)(.*)(<\/font>)#';
+			$position = 3;
+		}
+		$content = $this->getContent();
+		if (preg_match($pattern, $content, $match)) {
+			return $match[$position];
+		}else{
+			return NULL;
+		}
+	}
 	
+	/**
+	 * 从哪里获取年级
+	 * @param int $from 1为正方管理系统；2为学工管理
+	 * @return mixed null or string
+	 */
+	function getGrade($from = 1){
+		if ($from ==1 ){
+			$pattern ='#(<span id=\"lbl_dqszj\">)(.*)(<\/span>)#';
+			$position = 2;
+		}elseif( $from == 3){
+			$pattern = '#(<font id=\"XZNJ\" value=\"(\w){4}\">)(.*)(<\/font>)#';
+			$position = 3;
+		}else{
+			$pattern = '#(<font id=\"NJ\" value=\"(\w){4}\">)(.*)(<\/font>)#';
+			$position = 3;
+		}
 	
+		$content = $this->getContent();
+		if (preg_match($pattern, $content,$match)) {
+			return $match[$position];
+		}else{
+			return NULL;
+		}
+	}
 	
+	/**
+	 * 从哪里获得专业
+	 * @param int $from 1为正方管理系统；2为学工管理
+	 * @return mixed null or string
+	 */
+	function getMajor($from = 1){
+		if ($from ==1 ){
+			$pattern ='#(<span id=\"lbl_xzb\">)(.*)(<\/span>)#';
+			$position = 2;
+		}elseif($from == 3){
+			$pattern = '#(<font id=\"ZYDM\" value=\"(\w){1,10}\">)(.*)(<\/font>)#';
+			$position = 3;
+		}else{
+			$pattern = '#(<font id=\"BJ\" value=\"(\w){7,10}\">)(.*)(<\/font>)#';
+			$position = 3;
+		}
 	
+		$content = $this->getContent();
+		if (preg_match($pattern, $content,$match)) {
+			return $match[$position];
+		}else{
+			return NULL;
+		}
+	}
 	
+	/**
+	 * 获得校区
+	 * 只能从 学工管理获得    	南校区或北校区
+	 * @return mixed null or string
+	 */
+	function getCampus(){
 	
+		$pattern = '#(<font id=\"XQ\" value=\"(.+)\">)(.*)(<\/font>)#';
+		$content = $this->getContent();
+		if (preg_match($pattern, $content,$match)) {
+				
+			return $match[3];
+		}else{
+			return NULL;
+		}
+	}
 	
+	/**
+	 * 获得宿舍楼
+	 * 只能从 学工管理获得
+	 * @return mixed null or string
+	 */
+	function getBlock(){
+		$pattern = '#(<font id=\"SSL\" value=\"(.+)\">)(.*)(<\/font>)#';
+		$content = $this->getContent();
+		if (preg_match($pattern, $content,$match)) {
+				
+			return $match[3];
+		}else{
+			return NULL;
+		}
+	}
 	
-	
-	
+	/**
+	 * 获得房间号
+	 * 只能从 学工管理获得
+	 * @return mixed null or string
+	 */
+	function getRoom(){
+		$pattern = '#(<font id=\"FJH\" value=\"(\w){2,4}\">)(.*)(<\/font>)#';
+		$content = $this->getContent();
+		if (preg_match($pattern, $content,$match)) {
+				
+			return $match[3];
+		}else{
+			return NULL;
+		}
+	}
 	
 }
-
-
 ?>

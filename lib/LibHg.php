@@ -73,7 +73,8 @@ class LibHg extends LibBase{
 		$redirectUrl = $info['url'];
 		$pattern ='#\=reader\.info#';
 		if(preg_match($pattern, $content)){
-			return true;
+			$userInfo = $this->getUserInfo();
+			return $userInfo;
 		}else{
 			return false;
 		}
@@ -134,10 +135,10 @@ class LibHg extends LibBase{
 				$match[10][$i] = str_replace('-', '', $match[10][$i]);
 			}
 			$result = array(
-					'id' => $match[2],
+					'loanId' => $match[2],
 					'url' => $match[4],
 					'title' => $match[5],
-					'returnDate' => $match[10]
+					'returnTime' => $match[10]
 			);
 			return $result;
 		}
@@ -172,7 +173,7 @@ class LibHg extends LibBase{
 	private function getHistoryListRegular(){
 		$regular = '';
 		//获得第一个通配符 
-		$regular .= '<td>(.)*?<\/td>';
+		$regular .= '<td>(\d*)?<\/td>';
 		$regular .= '<td>(.|\n)*?<a(.*?)href=\"\.\.\/servlet\/(.*)\">(.*)<\/a><\/td>'; // url, 书名
 		$regular .= '<td>(.*)<\/td>'; //作者
 		$regular .= '<td>(.*)<\/td>'; //出版社
@@ -192,6 +193,33 @@ class LibHg extends LibBase{
 		$regular .= '<td>(.*?)<\/td>';
 		$regular .= '<td>(.*?)<\/td>';
 		return '/'.$regular.'/i';
+	}
+	
+	/* (non-PHPdoc)
+	 * @see LibBase::getRequestUrl()
+	 */
+	public function getRequestUrl($schoolNumber, $type) {
+		// TODO Auto-generated method stub
+	}
+
+	/**
+	 * 获取用户信息
+	 */
+	private function getUserInfo(){
+		$requestUrl = $this->baseUrl.'opac.go?cmdACT=reader.info';
+		$this->saveContent($requestUrl);
+		$pattern = '/<th(.*)>姓名<\/th><td(.*?)>(.+?)<\/td>/i';
+		if(preg_match_all($pattern, $this->getContent(), $matches)){
+// 			var_dump($matches);
+			$result['username'] = $matches[3][0];
+			$result['academy'] = '';
+			$result['major'] = '';
+			$result['grade'] = '';
+			return $result;
+		}else{
+			return null;
+		}
+		
 	}
 
 	

@@ -185,10 +185,10 @@ class LibJndx extends LibBase{
 				$match[10][$i] = str_replace('-', '', $match[10][$i]);
 			}
 			$result = array(
-					'id' => $match[2],
+					'loanId' => $match[2],
 					'url' => $match[4],
 					'title' => $match[5],
-					'returnDate' => $match[10]
+					'returnTime' => $match[10]
 			);
 			return $result;
 		}
@@ -223,7 +223,7 @@ class LibJndx extends LibBase{
 	private function getHistoryListRegular(){
 		$regular = '';
 		//获得第一个通配符 
-		$regular .= '<td>(.)*?<\/td>';
+		$regular .= '<td>(.*)?<\/td>';
 		$regular .= '<td>(.|\n)*?<a(.*?)href=\"\.\.\/servlet\/(.*)\">(.*)<\/a><\/td>'; // url, 书名
 		$regular .= '<td>(.*)<\/td>'; //作者
 		$regular .= '<td>(.*)<\/td>'; //出版社
@@ -244,6 +244,12 @@ class LibJndx extends LibBase{
 		$regular .= '<td>(.*?)<\/td>';
 		return '/'.$regular.'/i';
 	}
+	/* (non-PHPdoc)
+	 * @see LibBase::getRequestUrl()
+	 */public function getRequestUrl($schoolNumber, $type) {
+		// TODO Auto-generated method stub
+		}
+
 
 	
 	
