@@ -34,8 +34,14 @@ header('Content-type:text/html; charset=utf-8');
 
 // =======广外=====================
 $lib = Factory::createClass('LibGw');
-if(($userInfo = $lib->checkField("20111003632", "yincd520")) != false){
-	var_dump($lib->getHistoryList());echo 2;die;
+if(($userInfo = $lib->checkField("***", "***")) != false){
+// 	$responseHeader = $lib->saveContent("http://lib.gdufs.edu.cn/uindex.php");
+// 	var_dump($lib->getContent());
+// 	$content = $lib->getContent();
+// 	file_put_contents("./testlib_content.txt", $content);
+// 	var_dump($userInfo);
+// 	var_dump($lib->getLoanList());
+// 	var_dump($lib->getHistoryList());echo 2;die;
 
 }else{
 	echo 0;

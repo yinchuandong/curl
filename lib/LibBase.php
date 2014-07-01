@@ -78,7 +78,13 @@ abstract class LibBase {
 	 */
 	public abstract function getRequestUrl($schoolNumber, $type);
 
-	
+	/**
+	 * 获得用户对象
+	 * @return NULL
+	 */
+	public function getUser(){
+		return null;
+	}
 	
 	
 	

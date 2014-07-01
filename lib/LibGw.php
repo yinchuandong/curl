@@ -1,4 +1,6 @@
 <?php 
+define(__UTIL__, dirname(dirname(__FILE__)).'/util');
+include __UTIL__.'/simple_html_dom.php';
 class LibGw extends LibBase{
 	
 	private $responseHeader = '';
@@ -13,13 +15,21 @@ class LibGw extends LibBase{
 	 * */
 	protected $cookieFile = '';
 	private $firstContent = '';//不知道这个干什么用
+	/**
+	 * 登陆成功后返回的url
+	 * */
+	private $libUrl = '';
 	
 	public function __construct(){
 		
 	}
 	
-	
-	public function checkField($studentNumber, $password, $formUrl='',$refer=''){
+	/**
+	 * 
+	 * 检查教务系统的用户名和密码
+	 * 
+	 * */
+	private function checkUser($studentNumber, $password, $formUrl='',$refer=''){
 		if (empty($formUrl)){//默认为正方管理系统的验证入口
 			$formUrl = 'http://tsg.gdufs.edu.cn/pkmslogin.form';
 		}
@@ -83,26 +93,29 @@ class LibGw extends LibBase{
 		$pattern ='#<TITLE>Success<\/TITLE>#';
 		
 		if(preg_match($pattern, $content)){
-			$userInfo = $this->getUserInfo($studentNumber);
-			return $userInfo;
+			return true;
 		}else{
 			return false;
 		}
 	}
 	
-	
-	public function checkField2($studentNumber, $password, $formUrl='',$refer=''){
+	/**
+	 * 
+	 * 检查图书馆系统
+	 * */
+	public function checkField($studentNumber, $password, $formUrl='',$refer=''){
 		if (empty($formUrl)){//默认为正方管理系统的验证入口
-			$formUrl = 'http://tsg.gdufs.edu.cn/pkmslogin.form';
+			$formUrl = 'http://lib.gdufs.edu.cn/bor_rec.php';
 		}
 		if (empty($refer)){
 			$refer = "http://tsg.gdufs.edu.cn/";
 		}
 	
 		$field = array(
-				'username'=>$studentNumber,
-				'password'=>$password,
-				'login-form-type'=> 'pwd',
+				'userid'=>$studentNumber,
+				'userpwd'=>$password,
+				'imageField.x'=> '36',
+				'imageField.y'=> '2'
 		);
 	
 		$param = '';
@@ -148,14 +161,31 @@ class LibGw extends LibBase{
 	
 		// 抓取URL并把它传递给浏览器
 		$content = curl_exec($ch);
+		$info = curl_getinfo($ch);
+		$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+		
 		curl_close($ch);
 		$this->parseResponseCookie($content);//从返回的内容中提取出cookie
-	
-	
-		$pattern ='#<TITLE>Success<\/TITLE>#';
-	
+		$body = substr($content, $header_size);
+		
+		//可以分离头部和Body部分
+// 		$arr = explode("\r\n\r\n", $content, 2);
+// 		file_put_contents("./testlib_content.txt", $content);
+
+		$pattern ='#url=uindex.php#';
 		if(preg_match($pattern, $content)){
+			$header = substr($content, 0, $header_size);
+// 			file_put_contents("./testlib_content2.txt", $header);
+			$content = explode("\r\n", $header);
+			if (preg_match('#bor_url=(.+)#', $header, $match)){
+				$this->libUrl = urldecode($match[1]);
+			}else{
+				return false;
+			}
+			$this->checkUser($studentNumber, $password);
 			$userInfo = $this->getUserInfo($studentNumber);
+// 			var_dump($userInfo);
+// 			$this->getUser();
 			return $userInfo;
 		}else{
 			return false;
@@ -185,9 +215,15 @@ class LibGw extends LibBase{
 		return $info;
 	}
 	
+	/**
+	 * 从学工系统中获得用户信息
+	 * @param unknown $studentNumber
+	 * @return Ambigous <mixed, NULL, unknown>
+	 */
 	public function getUserInfo($studentNumber){
 		$url = $this->getRequestUrl($studentNumber,3);
 		$this->saveContent($url);
+		
 		$userInfo['username'] =  $this->getName(3);
 		$userInfo['academy'] = $this->getAcademy(3);
 		$userInfo['grade'] = $this->getGrade(3);
@@ -210,7 +246,7 @@ class LibGw extends LibBase{
 	
 	
 	public function getHistoryList(){
-		$urilist = $this->getFinalUrl();
+		$urilist = $this->getFinalUrl($this->libUrl);
 		$url = $urilist['url'][1];
 		$this->saveContent($url);
 		$content = $this->getContent();
@@ -236,7 +272,7 @@ class LibGw extends LibBase{
 	}
 	
 	public function getLoanList(){
-		$urilist = $this->getFinalUrl();
+		$urilist = $this->getFinalUrl($this->libUrl);
 		$url = $urilist['url'][0]; 
 		$this->saveContent($url);
 		$content = $this->getContent();
@@ -260,7 +296,7 @@ class LibGw extends LibBase{
 	
 	
 	public function renew($bookId){
-		$uriList = $this->getFinalUrl();
+		$uriList = $this->getFinalUrl($this->libUrl);
 		$url = $this->getRenewUrl($uriList['url'][0]);
 		$url = $url['renewApart'];
 		$url .= '&'.$bookId.'=Y';
@@ -309,7 +345,7 @@ class LibGw extends LibBase{
 			);
 			return $result;
 		}else{
-			echo 'Library getAuthTmpUrl false';
+// 			echo 'Library getAuthTmpUrl false';
 			return null;
 		}
 	}
@@ -371,7 +407,7 @@ class LibGw extends LibBase{
 			);
 			return $result;
 		}else{
-			echo 'false3;';die;
+			return false;
 		}
 	
 	}
@@ -583,54 +619,6 @@ class LibGw extends LibBase{
 		}
 	}
 	
-	/**
-	 * 获得校区
-	 * 只能从 学工管理获得    	南校区或北校区
-	 * @return mixed null or string
-	 */
-	function getCampus(){
-	
-		$pattern = '#(<font id=\"XQ\" value=\"(.+)\">)(.*)(<\/font>)#';
-		$content = $this->getContent();
-		if (preg_match($pattern, $content,$match)) {
-				
-			return $match[3];
-		}else{
-			return NULL;
-		}
-	}
-	
-	/**
-	 * 获得宿舍楼
-	 * 只能从 学工管理获得
-	 * @return mixed null or string
-	 */
-	function getBlock(){
-		$pattern = '#(<font id=\"SSL\" value=\"(.+)\">)(.*)(<\/font>)#';
-		$content = $this->getContent();
-		if (preg_match($pattern, $content,$match)) {
-				
-			return $match[3];
-		}else{
-			return NULL;
-		}
-	}
-	
-	/**
-	 * 获得房间号
-	 * 只能从 学工管理获得
-	 * @return mixed null or string
-	 */
-	function getRoom(){
-		$pattern = '#(<font id=\"FJH\" value=\"(\w){2,4}\">)(.*)(<\/font>)#';
-		$content = $this->getContent();
-		if (preg_match($pattern, $content,$match)) {
-				
-			return $match[3];
-		}else{
-			return NULL;
-		}
-	}
 	
 }
 ?>

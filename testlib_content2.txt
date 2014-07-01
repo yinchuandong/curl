@@ -1,0 +1,14 @@
+HTTP/1.1 200 OK
+Date: Tue, 01 Jul 2014 12:51:28 GMT
+Server: Apache/2.2.9 (APMServ) PHP/5.2.6
+X-Powered-By: PHP/5.2.6
+Set-Cookie: user=20111003653
+Set-Cookie: gdufsuser=20111003653
+Set-Cookie: auth=01ca53359dc0ddd26167e55e129cf6b7
+Set-Cookie: gdufslogin=1
+Set-Cookie: bor_url=http%3A%2F%2Fopac.gdufs.edu.cn%3A8991%2FF%3Ffunc%3Dgwd_auth%26userid%3D20111003653%26timestamp%3D20140701205128%26authid%3D5EFA833D91CF039E2039FF9354C8173F
+Content-Length: 97
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+Content-Type: text/html
+
