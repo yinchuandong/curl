@@ -29,17 +29,19 @@ $result = $user->saveContent("http://jw.gdufs.edu.cn/xf_xsyxxxk.aspx?xh=20111003
 
 // var_dump($result);
 $content = $user->getContent();
+var_dump($content);
 $form = $user->getFormData();
 $form['ddl_ywyl'] = "";
 $form['ddl_kcgs'] = "";
 $form['ddl_sksj'] = "";
 $form['ddl_xqbs'] = 2;
+//你要选的课程代号，这个你要自己去审查元素
 $form['kcmcGrid:_ctl4:xk'] = 'on';
 $form['kcmcGrid:_ctl3:xk'] = 'on';
 $form['kcmcGrid:_ctl8:xk'] = 'on';
 // $form['kcmcGrid:_ctl5:xk'] = 'on';
 $form['Button1'] = '提交';
-var_dump($form);
+// var_dump($form);
 // while(true){
 // 	$user->doSelectCourse($form,"http://jw.gdufs.edu.cn/xf_xsyxxxk.aspx?xh=20111003632&xm=尹川东&gnmkdm=N121106");
 // 	sleep(1);

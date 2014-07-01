@@ -90,6 +90,77 @@ class LibGw extends LibBase{
 		}
 	}
 	
+	
+	public function checkField2($studentNumber, $password, $formUrl='',$refer=''){
+		if (empty($formUrl)){//默认为正方管理系统的验证入口
+			$formUrl = 'http://tsg.gdufs.edu.cn/pkmslogin.form';
+		}
+		if (empty($refer)){
+			$refer = "http://tsg.gdufs.edu.cn/";
+		}
+	
+		$field = array(
+				'username'=>$studentNumber,
+				'password'=>$password,
+				'login-form-type'=> 'pwd',
+		);
+	
+		$param = '';
+		foreach ($field as $key => $value){
+			$param .= "$key=".urlencode($value)."&";
+		}
+		$param = substr($param, 0,-1);
+		$host = $this->parseHost($formUrl);
+		$origin = 'http://'.$host;
+		// 		echo $host.'===='.$origin.'===='.$refer;
+	
+	
+		$header = array(
+				'POST /pkmslogin.form HTTP/1.1',
+				'Host: '.$host,
+				'Connection: keep-alive',
+				'Content-Length: '.strlen($param),
+				'Cache-Control: max-age=0',
+				'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+				'Origin: '.$origin,
+				'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.12 Safari/537.31',
+				'Content-Type: application/x-www-form-urlencoded',
+				'Referer: '.$refer,
+				'Accept-Encoding: gzip,deflate,sdch',
+				'Accept-Language: zh-CN,zh;q=0.8',
+				'Accept-Charset: GBK,utf-8;q=0.7,*;q=0.3',
+					
+		);
+	
+		//将cookie写入文件中
+		$this->cookieFile = dirname(__FILE__).'/cookie/'.'LibGw'.$studentNumber.'.txt';
+	
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $formUrl);
+		curl_setopt($ch, CURLOPT_HEADER, true);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $param);
+		// 		curl_setopt($ch, CURLOPT_COOKIEJAR, $this->cookieFile);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);//跟随跳转
+	
+		// 抓取URL并把它传递给浏览器
+		$content = curl_exec($ch);
+		curl_close($ch);
+		$this->parseResponseCookie($content);//从返回的内容中提取出cookie
+	
+	
+		$pattern ='#<TITLE>Success<\/TITLE>#';
+	
+		if(preg_match($pattern, $content)){
+			$userInfo = $this->getUserInfo($studentNumber);
+			return $userInfo;
+		}else{
+			return false;
+		}
+	}
 	/**
 	 * 保存页面返回内容,返回服务器端的返回头部，包括redirect_url
 	 * @param string $requesUrl 请求地址的url
@@ -121,6 +192,19 @@ class LibGw extends LibBase{
 		$userInfo['academy'] = $this->getAcademy(3);
 		$userInfo['grade'] = $this->getGrade(3);
 		$userInfo['major'] = $this->getMajor(3);
+		if ($userInfo['username'] != NULL) {
+			return $userInfo;
+		}
+		$requestUrl = "http://tsg.gdufs.edu.cn/gwd_local/login_ibm.jsp";
+		$result = $this->saveContent($requestUrl);
+		$pattern = "/<tr>(.|\n)*?<\/tr>/i";
+		if (preg_match($pattern, $this->getContent(), $matches)) {
+			$str = strip_tags($matches[0]);
+			$qian=array(" ","　","\t","\n","\r","姓名");
+			$hou=array("","","","","");
+			$str = str_replace($qian,$hou,$str);
+			$userInfo['username'] =  $str;
+		}
 		return $userInfo;
 	}
 	
