@@ -5,11 +5,11 @@ $user = new Gwtxz();
 
 $field = array(
 		// 'userid'=>'20111003632',
-		// 'userpwd'=>'yin543211',
+		// 'userpwd'=>'***',
 		// 'imageField.x'=>'18',
 		// 'imageField.y'=>'4',
 		'username'=>'20111003632',
-		'password'=>'yincd520',
+		'password'=>'***',
 		'login-form-type'=> 'pwd', //$_POST['login-form-type']
 	);
 
